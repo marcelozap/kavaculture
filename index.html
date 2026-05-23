@@ -1,0 +1,362 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Kava Culture Kava Bar | Drink Love</title>
+    <meta
+      name="description"
+      content="Kava Culture phone ordering concept with direct pay, gratuity on phone, and interactive drink discovery."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Allura&family=Fraunces:wght@500;600;700&family=Orbitron:wght@500;700;800&family=Space+Grotesk:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="site-shell">
+      <div class="ambient ambient-a" aria-hidden="true"></div>
+      <div class="ambient ambient-b" aria-hidden="true"></div>
+
+      <header class="topbar panel">
+        <div class="brand-lockup">
+          <img class="brand-logo-image" src="./assets/kava-culture-logo-neon.png" alt="Kava Culture Kava Bar logo" />
+          <div class="brand-copy">
+            <p class="eyebrow">Drink Love</p>
+            <h1 class="logo-wordmark">Kava Culture Kava Bar</h1>
+            <p class="scriptline">Welcome to the Tribe</p>
+          </div>
+        </div>
+
+        <p class="topbar-copy">
+          Craft your experience, order from your phone, tip with ease, and move more volume through direct pay instead
+          of defaulting to the counter.
+        </p>
+
+        <div class="topbar-actions">
+          <button class="ghost-button" type="button" data-scroll-target="builder">Craft Your Experience</button>
+          <button class="primary-button" type="button" data-scroll-target="checkout">Order On Your Phone</button>
+        </div>
+      </header>
+
+      <main class="layout">
+        <section class="hero panel">
+          <div class="hero-copy">
+            <p class="eyebrow">Craft Your Experience</p>
+            <p class="scriptline hero-script">Upgrade to premium crushed leaf. Upgrade to premium Fiji.</p>
+            <h2>Choose your feeling, build your flavors, and let every pour feel like part of the tribe.</h2>
+            <p class="lead">
+              This concept brings the board language onto the phone: pick your feeling, choose your botanical infusion,
+              find your drink love, add gratuity on your screen, and close out with a direct-pay-first flow.
+            </p>
+
+            <div class="hero-badges" aria-label="Brand highlights">
+              <span>Drink Love</span>
+              <span>Welcome to the Tribe</span>
+              <span>Premium Crushed Leaf</span>
+            </div>
+
+            <div class="hero-stats">
+              <article>
+                <span>Pick your feeling</span>
+                <strong>Relax + Move, Mood + Joy, Energy + Focus</strong>
+              </article>
+              <article>
+                <span>Pay direct first</span>
+                <strong>Bank and wallet-first checkout to reduce Clover drag</strong>
+              </article>
+              <article>
+                <span>Tip on phone</span>
+                <strong>Guest gratuity is built into the flow before pickup</strong>
+              </article>
+            </div>
+          </div>
+
+          <div class="stage-panel">
+            <div class="stage-header">
+              <div>
+                <p class="eyebrow">Drink Love</p>
+                <h3 id="stageDrinkName">Fijian Sunset</h3>
+              </div>
+              <span class="stage-price" id="stageDrinkPrice">$18.00</span>
+            </div>
+
+            <div class="drink-stage" id="drinkStage">
+              <div class="stage-halo" aria-hidden="true"></div>
+              <div class="menu-texture menu-texture-a" aria-hidden="true"></div>
+              <div class="menu-texture menu-texture-b" aria-hidden="true"></div>
+              <img class="stage-drink-poster" id="stageDrinkPoster" alt="Poster artwork for the selected drink" />
+              <div class="stage-poster-frame" aria-hidden="true">
+                <span class="stage-poster-title">Drink Love</span>
+                <span class="stage-poster-script">Craft Your Experience</span>
+              </div>
+
+              <button class="drink-card" id="drinkCard" type="button" aria-label="Interactive 3D drink preview">
+                <span class="card-glare"></span>
+                <span class="glass">
+                  <span class="foam"></span>
+                  <span class="liquid"></span>
+                  <span class="ice ice-a"></span>
+                  <span class="ice ice-b"></span>
+                  <span class="ice ice-c"></span>
+                  <span class="straw"></span>
+                  <span class="garnish"></span>
+                  <span class="drink-orbit drink-orbit-a"></span>
+                  <span class="drink-orbit drink-orbit-b"></span>
+                  <span class="spark spark-a"></span>
+                  <span class="spark spark-b"></span>
+                  <span class="spark spark-c"></span>
+                </span>
+                <span class="card-floor"></span>
+              </button>
+            </div>
+
+            <div class="stage-body">
+              <p id="stageDrinkDescription">
+                Island fruit blend and raspberry with that sunset-glow finish that feels made for a patio pickup.
+              </p>
+              <div class="detail-pills" id="stageIngredients"></div>
+            </div>
+
+            <div class="stage-meta">
+              <article>
+                <span>Feeling</span>
+                <strong id="stageFeeling">Mood + Joy</strong>
+              </article>
+              <article>
+                <span>Infusion</span>
+                <strong id="stageInfusion">Fiji</strong>
+              </article>
+              <article>
+                <span>Checkout path</span>
+                <strong id="stagePaymentHint">Direct pay saves more than Clover</strong>
+              </article>
+            </div>
+          </div>
+        </section>
+
+        <section class="builder-grid" id="builder">
+          <section class="builder panel">
+            <div class="section-heading">
+              <p class="eyebrow">Build Your Order</p>
+              <h2>Phone ordering that feels like the real board.</h2>
+              <p>Every drink on the two menu boards is here, with direct-pay friendly checkout and gratuity built in.</p>
+            </div>
+
+            <div class="progress-track">
+              <article class="progress-pill">
+                <span>Feeling</span>
+                <strong id="feelingPreview">Mood + Joy</strong>
+              </article>
+              <article class="progress-pill">
+                <span>Infusion</span>
+                <strong id="infusionPreview">Fiji</strong>
+              </article>
+              <article class="progress-pill">
+                <span>Drink</span>
+                <strong id="drinkPreview">Fijian Sunset</strong>
+              </article>
+              <article class="progress-pill">
+                <span>Payment</span>
+                <strong id="paymentPreview">Direct bank pay</strong>
+              </article>
+            </div>
+
+            <div class="builder-stack">
+              <section class="builder-section">
+                <div class="builder-copy">
+                  <span class="step-index">1</span>
+                  <div>
+                    <h3>Pick your feeling</h3>
+                    <p>Relax + Move, Mood + Joy, Energy + Focus, or a stronger finish.</p>
+                  </div>
+                </div>
+                <div class="choice-grid feeling-grid" id="feelingOptions"></div>
+              </section>
+
+              <section class="builder-section">
+                <div class="builder-copy">
+                  <span class="step-index">2</span>
+                  <div>
+                    <h3>Pick your botanical infusion</h3>
+                    <p>Fiji, Green Vein, White Vein, Red Vein, or Yellow Vein.</p>
+                  </div>
+                </div>
+                <div class="choice-grid infusion-grid" id="infusionOptions"></div>
+              </section>
+
+              <section class="builder-section">
+                <div class="builder-copy">
+                  <span class="step-index">3</span>
+                  <div>
+                    <h3>Find your drink love</h3>
+                    <p>Each menu item gets its own artwork, price, and flavor-forward description.</p>
+                  </div>
+                </div>
+                <div class="choice-grid drink-grid" id="drinkOptions"></div>
+              </section>
+
+              <section class="builder-section">
+                <div class="builder-copy">
+                  <span class="step-index">4</span>
+                  <div>
+                    <h3>Craft your flavors</h3>
+                    <p>Organic flavors and creamy add-ons that raise the ticket without slowing the line.</p>
+                  </div>
+                </div>
+                <div class="choice-grid flavor-grid" id="flavorOptions"></div>
+              </section>
+
+              <section class="builder-section">
+                <div class="builder-copy">
+                  <span class="step-index">5</span>
+                  <div>
+                    <h3>Elevate</h3>
+                    <p>Premium crushed leaf, a new level shot, or a top shelf finish.</p>
+                  </div>
+                </div>
+                <div class="choice-grid elevate-grid" id="elevateOptions"></div>
+              </section>
+            </div>
+          </section>
+
+          <section class="checkout panel" id="checkout">
+            <div class="section-heading">
+              <p class="eyebrow">Checkout</p>
+              <h2>Tip and pay on your phone.</h2>
+              <p>The default path pushes guests toward direct pay first so the bar keeps more of every order.</p>
+            </div>
+
+            <div class="guest-form">
+              <label>
+                Guest name
+                <input id="guestName" type="text" placeholder="Tribe Guest" />
+              </label>
+              <label>
+                Pickup spot
+                <select id="pickupSpot">
+                  <option>Front bar</option>
+                  <option>Patio</option>
+                  <option>Window pickup</option>
+                  <option>Table side</option>
+                </select>
+              </label>
+            </div>
+
+            <div>
+              <div class="subheading">
+                <h3>Gratuity</h3>
+                <span>Built in before pickup</span>
+              </div>
+              <div class="tip-grid" id="tipOptions"></div>
+            </div>
+
+            <div>
+              <div class="subheading">
+                <h3>Payment path</h3>
+                <span id="providerBadge">Direct pay saves margin</span>
+              </div>
+              <div class="payment-grid" id="paymentOptions"></div>
+            </div>
+
+            <div class="fee-banner" id="feeBanner"></div>
+
+            <div class="qr-panel">
+              <div class="qr-code" aria-hidden="true">
+                <span></span><span></span><span></span><span></span><span></span>
+                <span></span><span></span><span></span><span></span><span></span>
+                <span></span><span></span><span></span><span></span><span></span>
+                <span></span><span></span><span></span><span></span><span></span>
+                <span></span><span></span><span></span><span></span><span></span>
+              </div>
+              <div class="qr-copy">
+                <span>Phone-first flow</span>
+                <strong id="qrCallout">Direct bank pay keeps the most margin on this ticket.</strong>
+                <p>Use this as the hosted payment link, SMS checkout, or QR handoff after the guest builds their drink.</p>
+              </div>
+            </div>
+
+            <div class="summary-card">
+              <div class="subheading">
+                <h3>Order summary</h3>
+                <div class="quantity-control">
+                  <button type="button" id="decreaseQuantity">-</button>
+                  <strong id="quantityValue">1</strong>
+                  <button type="button" id="increaseQuantity">+</button>
+                </div>
+              </div>
+
+              <ol class="summary-list" id="summaryList"></ol>
+
+              <div class="total-lines">
+                <div><span>Subtotal</span><strong id="subtotalValue">$0.00</strong></div>
+                <div><span>Tip</span><strong id="tipValue">$0.00</strong></div>
+                <div><span>Estimated processing</span><strong id="processingValue">$0.00</strong></div>
+                <div class="grand-total"><span>Guest total</span><strong id="totalValue">$0.00</strong></div>
+                <div class="net-line"><span>Projected net to bar</span><strong id="netValue">$0.00</strong></div>
+              </div>
+            </div>
+
+            <div class="checkout-actions">
+              <a class="primary-button wide" id="submitOrder" href="#checkout">Open direct pay prototype</a>
+              <p class="checkout-note" id="checkoutNote">
+                This is a polished front-end concept ready to connect to Stripe, Square, or another direct payment flow.
+              </p>
+            </div>
+          </section>
+        </section>
+
+        <section class="bottom-grid">
+          <section class="insight-panel panel">
+            <div class="section-heading">
+              <p class="eyebrow">Why This Works</p>
+              <h2>Built to help the bar move faster and keep more.</h2>
+            </div>
+
+            <div class="insight-grid">
+              <article>
+                <span>1</span>
+                <strong>Direct-pay-first</strong>
+                <p>Guests can pay and tip before they reach the counter, so the staff spends less time turning Clover around.</p>
+              </article>
+              <article>
+                <span>2</span>
+                <strong>Brand-matched ordering</strong>
+                <p>The whole experience borrows the language, palette, and tropical neon feel of the in-store menu boards.</p>
+              </article>
+              <article>
+                <span>3</span>
+                <strong>Every drink visualized</strong>
+                <p>Each drink gets a custom poster-style visual so discovery feels more like a premium menu than a basic POS list.</p>
+              </article>
+            </div>
+          </section>
+
+          <section class="source-panel panel">
+            <div class="section-heading">
+              <p class="eyebrow">Menu Boards</p>
+              <h2>The printed vibe, translated to the phone.</h2>
+              <p>The site design, wording, and atmosphere pull directly from the two boards you shared.</p>
+            </div>
+
+            <div class="source-gallery">
+              <figure>
+                <img src="./assets/kava-menu-craft.jpeg" alt="Kava Culture Craft Your Experience menu board" />
+                <figcaption>Craft Your Experience and coffee, tea, and elevate language.</figcaption>
+              </figure>
+              <figure>
+                <img src="./assets/kava-menu-botanicals.jpeg" alt="Kava Culture botanical infusions menu board" />
+                <figcaption>Botanical infusions, drink love cocktails, and premium plant boys lineup.</figcaption>
+              </figure>
+            </div>
+          </section>
+        </section>
+      </main>
+    </div>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
