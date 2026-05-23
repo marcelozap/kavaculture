@@ -62,7 +62,6 @@ const menuData = {
   paymentMethods: [
     { id: "bank", name: "Direct bank pay", shortName: "Direct bank pay", label: "Lowest fee", note: "Best margin for the bar on a hosted pay link or ACH-style checkout.", feeRate: 0.012, feeFixed: 0.05 },
     { id: "wallet", name: "Phone wallet link", shortName: "Phone wallet", label: "Fast guest UX", note: "Great for QR, Apple Pay, or an SMS payment page.", feeRate: 0.021, feeFixed: 0.08 },
-    { id: "clover", name: "Clover at counter", shortName: "Clover", label: "Fallback only", note: "Still available, but it should not be the first choice in this flow.", feeRate: 0.038, feeFixed: 0.1 },
   ],
   tipOptions: [15, 20, 25, 30],
 };
@@ -281,11 +280,9 @@ function renderTipOptions() {
 }
 
 function renderPaymentOptions() {
-  const cloverFee = estimateProcessingCost("clover");
   refs.paymentOptions.innerHTML = menuData.paymentMethods.map((item) => {
     const fee = estimateProcessingCost(item.id);
-    const savings = Math.max(0, cloverFee - fee);
-    const detail = item.id === "clover" ? `Est. fee ${formatCurrency(fee)}` : `Keeps about ${formatCurrency(savings)} more than Clover`;
+    const detail = item.id === "bank" ? `Est. processing ${formatCurrency(fee)}` : `Est. processing ${formatCurrency(fee)}`;
     return `
       <button class="payment-card" type="button" data-payment-id="${item.id}" data-active="${item.id === state.selectedPaymentId}">
         <span class="price-tag">${item.label}</span>
@@ -310,7 +307,7 @@ function updateStage() {
   refs.stageDrinkPoster.alt = `${drink.name} poster artwork`;
   refs.stageFeeling.textContent = feeling.name;
   refs.stageInfusion.textContent = infusion.name;
-  refs.stagePaymentHint.textContent = state.selectedPaymentId === "clover" ? "Counter fallback selected" : "Direct pay saves more than Clover";
+  refs.stagePaymentHint.textContent = state.selectedPaymentId === "bank" ? "Preferred low-friction checkout" : "Fast digital wallet experience";
   refs.stageIngredients.innerHTML = tags.map((tag) => `<span>${tag}</span>`).join("");
 
   document.documentElement.style.setProperty("--accent-one", drink.colors[0]);
@@ -338,9 +335,7 @@ function updateCheckout() {
   const tip = getTipAmount();
   const total = getGuestTotal();
   const processing = estimateProcessingCost();
-  const cloverFee = estimateProcessingCost("clover");
   const projectedNet = total - processing;
-  const savings = cloverFee - processing;
 
   refs.guestName.value = state.guestName;
   refs.pickupSpot.value = state.pickupSpot;
@@ -357,20 +352,16 @@ function updateCheckout() {
   refs.processingValue.textContent = formatCurrency(processing);
   refs.totalValue.textContent = formatCurrency(total);
   refs.netValue.textContent = formatCurrency(projectedNet);
-  refs.providerBadge.textContent = payment.id === "clover" ? "Fallback only" : `${formatCurrency(Math.max(0, savings))} saved vs Clover`;
-  refs.feeBanner.textContent = payment.id === "clover"
-    ? "Clover is still available, but it is shown here as the least favorable path for fees."
-    : `${payment.name} is projected to keep about ${formatCurrency(Math.max(0, savings))} more on this ticket than Clover.`;
-  refs.qrCallout.textContent = payment.id === "clover"
-    ? "Counter fallback selected for this order."
-    : `${payment.name} keeps the most margin for this ticket.`;
+  refs.providerBadge.textContent = payment.id === "bank" ? "Preferred low-fee option" : "Fast guest checkout";
+  refs.feeBanner.textContent = `${payment.name} is estimated at ${formatCurrency(processing)} in processing on this ticket.`;
+  refs.qrCallout.textContent = payment.id === "bank"
+    ? "Direct bank pay is the preferred checkout option for this ticket."
+    : "Phone wallet link offers the fastest guest checkout flow.";
 
   const orderSummary = `${getSelectedDrink().name} for ${state.guestName || "Tribe Guest"} at ${formatCurrency(total)} with ${state.selectedTip}% gratuity`;
-  refs.submitOrder.textContent = payment.id === "clover" ? "Send to Clover counter fallback" : "Open direct pay prototype";
+  refs.submitOrder.textContent = "Open direct pay prototype";
   refs.submitOrder.href = `mailto:hello@kavaculture.xyz?subject=${encodeURIComponent("Kava Culture Phone Order")}&body=${encodeURIComponent(orderSummary)}`;
-  refs.checkoutNote.textContent = payment.id === "clover"
-    ? "This path intentionally behaves like a fallback. The direct-pay options above are the preferred guest experience."
-    : "This static prototype is ready to connect to a live hosted checkout so guests can pay and tip on their phone before pickup.";
+  refs.checkoutNote.textContent = "This static prototype is ready to connect to a live hosted checkout so guests can pay and tip on their phone before pickup.";
 }
 
 function renderAll() {

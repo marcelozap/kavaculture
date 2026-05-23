@@ -617,6 +617,27 @@ h3 {
   grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
 }
 
+.events-panel {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 24px 28px;
+  background:
+    linear-gradient(135deg, rgba(255, 202, 110, 0.08), rgba(110, 242, 255, 0.08)),
+    rgba(13, 10, 26, 0.82);
+}
+
+.events-copy {
+  display: grid;
+  gap: 10px;
+  max-width: 44rem;
+}
+
+.events-link {
+  flex: 0 0 auto;
+}
+
 .builder,
 .checkout,
 .insight-panel,
@@ -917,6 +938,11 @@ h3 {
   .stage-meta,
   .insight-grid {
     grid-template-columns: 1fr;
+  }
+
+  .events-panel {
+    flex-direction: column;
+    align-items: flex-start;
   }
 }
 
