@@ -75,7 +75,6 @@ const state = {
   selectedTip: 20,
   selectedPaymentId: "bank",
   guestName: "Tribe Guest",
-  pickupSpot: "Front bar",
   quantity: 1,
 };
 
@@ -107,12 +106,9 @@ const refs = {
   summaryList: document.querySelector("#summaryList"),
   subtotalValue: document.querySelector("#subtotalValue"),
   tipValue: document.querySelector("#tipValue"),
-  processingValue: document.querySelector("#processingValue"),
   totalValue: document.querySelector("#totalValue"),
-  netValue: document.querySelector("#netValue"),
   checkoutNote: document.querySelector("#checkoutNote"),
   guestName: document.querySelector("#guestName"),
-  pickupSpot: document.querySelector("#pickupSpot"),
   submitOrder: document.querySelector("#submitOrder"),
   decreaseQuantity: document.querySelector("#decreaseQuantity"),
   increaseQuantity: document.querySelector("#increaseQuantity"),
@@ -281,8 +277,7 @@ function renderTipOptions() {
 
 function renderPaymentOptions() {
   refs.paymentOptions.innerHTML = menuData.paymentMethods.map((item) => {
-    const fee = estimateProcessingCost(item.id);
-    const detail = item.id === "bank" ? `Est. processing ${formatCurrency(fee)}` : `Est. processing ${formatCurrency(fee)}`;
+    const detail = item.id === "bank" ? "Best for a simple direct checkout flow" : "Fastest option for a quick phone payment";
     return `
       <button class="payment-card" type="button" data-payment-id="${item.id}" data-active="${item.id === state.selectedPaymentId}">
         <span class="price-tag">${item.label}</span>
@@ -307,7 +302,7 @@ function updateStage() {
   refs.stageDrinkPoster.alt = `${drink.name} poster artwork`;
   refs.stageFeeling.textContent = feeling.name;
   refs.stageInfusion.textContent = infusion.name;
-  refs.stagePaymentHint.textContent = state.selectedPaymentId === "bank" ? "Preferred low-friction checkout" : "Fast digital wallet experience";
+  refs.stagePaymentHint.textContent = state.selectedPaymentId === "bank" ? "Secure low-friction checkout" : "Fast digital wallet checkout";
   refs.stageIngredients.innerHTML = tags.map((tag) => `<span>${tag}</span>`).join("");
 
   document.documentElement.style.setProperty("--accent-one", drink.colors[0]);
@@ -334,11 +329,8 @@ function updateCheckout() {
   const subtotal = getSubtotal();
   const tip = getTipAmount();
   const total = getGuestTotal();
-  const processing = estimateProcessingCost();
-  const projectedNet = total - processing;
 
   refs.guestName.value = state.guestName;
-  refs.pickupSpot.value = state.pickupSpot;
   refs.quantityValue.textContent = String(state.quantity);
 
   refs.summaryList.innerHTML = [
@@ -349,19 +341,17 @@ function updateCheckout() {
 
   refs.subtotalValue.textContent = formatCurrency(subtotal);
   refs.tipValue.textContent = formatCurrency(tip);
-  refs.processingValue.textContent = formatCurrency(processing);
   refs.totalValue.textContent = formatCurrency(total);
-  refs.netValue.textContent = formatCurrency(projectedNet);
-  refs.providerBadge.textContent = payment.id === "bank" ? "Preferred low-fee option" : "Fast guest checkout";
-  refs.feeBanner.textContent = `${payment.name} is estimated at ${formatCurrency(processing)} in processing on this ticket.`;
+  refs.providerBadge.textContent = payment.id === "bank" ? "Secure bank checkout" : "Fast wallet checkout";
+  refs.feeBanner.textContent = `${payment.name} is available for this order and keeps checkout on the guest's phone from start to finish.`;
   refs.qrCallout.textContent = payment.id === "bank"
-    ? "Direct bank pay is the preferred checkout option for this ticket."
-    : "Phone wallet link offers the fastest guest checkout flow.";
+    ? "Direct bank pay is ready for this order."
+    : "Phone wallet link is ready for this order.";
 
   const orderSummary = `${getSelectedDrink().name} for ${state.guestName || "Tribe Guest"} at ${formatCurrency(total)} with ${state.selectedTip}% gratuity`;
-  refs.submitOrder.textContent = "Open direct pay prototype";
+  refs.submitOrder.textContent = "Continue to checkout";
   refs.submitOrder.href = `mailto:hello@kavaculture.xyz?subject=${encodeURIComponent("Kava Culture Phone Order")}&body=${encodeURIComponent(orderSummary)}`;
-  refs.checkoutNote.textContent = "This static prototype is ready to connect to a live hosted checkout so guests can pay and tip on their phone before pickup.";
+  refs.checkoutNote.textContent = "Guests can choose their drink, tip on their phone, and move straight into checkout.";
 }
 
 function renderAll() {
@@ -433,10 +423,6 @@ function bindInputs() {
   });
   refs.guestName.addEventListener("input", (event) => {
     state.guestName = event.target.value;
-    updateCheckout();
-  });
-  refs.pickupSpot.addEventListener("change", (event) => {
-    state.pickupSpot = event.target.value;
     updateCheckout();
   });
   bindScrollButtons();

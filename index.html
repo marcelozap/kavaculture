@@ -6,7 +6,7 @@
     <title>Kava Culture Kava Bar | Drink Love</title>
     <meta
       name="description"
-      content="Kava Culture phone ordering concept with gratuity on phone, preferred digital checkout, and interactive drink discovery."
+      content="Kava Culture phone ordering with gratuity on phone, digital checkout, and interactive drink discovery."
     />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -32,8 +32,7 @@
         </div>
 
         <p class="topbar-copy">
-          Craft your experience, order from your phone, tip with ease, and create a smoother guest checkout experience
-          from menu to pickup.
+          Craft your experience, order from your phone, tip with ease, and move from menu to pickup in one smooth flow.
         </p>
 
         <div class="topbar-actions">
@@ -49,8 +48,8 @@
             <p class="scriptline hero-script">Upgrade to premium crushed leaf. Upgrade to premium Fiji.</p>
             <h2>Choose your feeling, build your flavors, and let every pour feel like part of the tribe.</h2>
             <p class="lead">
-              This concept brings the board language onto the phone: pick your feeling, choose your botanical infusion,
-              find your drink love, add gratuity on your screen, and close out with a direct-pay-first flow.
+              Pick your feeling, choose your botanical infusion, find your drink love, add gratuity on your screen,
+              and move straight into checkout.
             </p>
 
             <div class="hero-badges" aria-label="Brand highlights">
@@ -66,7 +65,7 @@
               </article>
               <article>
                 <span>Preferred checkout</span>
-                <strong>Digital payment options built for speed, clarity, and easy pickup</strong>
+                <strong>Digital payment built for speed, clarity, and easy pickup</strong>
               </article>
               <article>
                 <span>Tip on phone</span>
@@ -132,7 +131,7 @@
               </article>
               <article>
                 <span>Checkout path</span>
-                <strong id="stagePaymentHint">Preferred digital checkout experience</strong>
+                <strong id="stagePaymentHint">Secure digital checkout</strong>
               </article>
             </div>
           </div>
@@ -227,7 +226,7 @@
             <div class="section-heading">
               <p class="eyebrow">Checkout</p>
               <h2>Tip and pay on your phone.</h2>
-              <p>Guests can review, tip, and complete checkout from their phone before they arrive at pickup.</p>
+              <p>Guests can review their drink, add gratuity, and check out on their phone before pickup.</p>
             </div>
 
             <div class="guest-form">
@@ -235,21 +234,12 @@
                 Guest name
                 <input id="guestName" type="text" placeholder="Tribe Guest" />
               </label>
-              <label>
-                Pickup spot
-                <select id="pickupSpot">
-                  <option>Front bar</option>
-                  <option>Patio</option>
-                  <option>Window pickup</option>
-                  <option>Table side</option>
-                </select>
-              </label>
             </div>
 
             <div>
               <div class="subheading">
                 <h3>Gratuity</h3>
-                <span>Built in before pickup</span>
+                <span>Add before pickup</span>
               </div>
               <div class="tip-grid" id="tipOptions"></div>
             </div>
@@ -257,7 +247,7 @@
             <div>
               <div class="subheading">
                 <h3>Payment method</h3>
-                <span id="providerBadge">Preferred digital checkout</span>
+                <span id="providerBadge">Secure digital checkout</span>
               </div>
               <div class="payment-grid" id="paymentOptions"></div>
             </div>
@@ -273,9 +263,9 @@
                 <span></span><span></span><span></span><span></span><span></span>
               </div>
               <div class="qr-copy">
-                <span>Phone-first flow</span>
-                <strong id="qrCallout">Direct bank pay is the preferred checkout option for this ticket.</strong>
-                <p>Use this as the hosted payment link, SMS checkout, or QR handoff after the guest builds their drink.</p>
+                <span>Phone checkout</span>
+                <strong id="qrCallout">Direct bank pay is ready for this order.</strong>
+                <p>Open the checkout link, complete payment on phone, and walk up when the bar is ready.</p>
               </div>
             </div>
 
@@ -294,16 +284,14 @@
               <div class="total-lines">
                 <div><span>Subtotal</span><strong id="subtotalValue">$0.00</strong></div>
                 <div><span>Tip</span><strong id="tipValue">$0.00</strong></div>
-                <div><span>Estimated processing</span><strong id="processingValue">$0.00</strong></div>
                 <div class="grand-total"><span>Guest total</span><strong id="totalValue">$0.00</strong></div>
-                <div class="net-line"><span>Projected net to bar</span><strong id="netValue">$0.00</strong></div>
               </div>
             </div>
 
             <div class="checkout-actions">
-              <a class="primary-button wide" id="submitOrder" href="#checkout">Open direct pay prototype</a>
+              <a class="primary-button wide" id="submitOrder" href="#checkout">Continue to checkout</a>
               <p class="checkout-note" id="checkoutNote">
-                This is a polished front-end concept ready to connect to Stripe, Square, or another digital payment flow.
+                Guests can choose their drink, tip on their phone, and move straight into checkout.
               </p>
             </div>
           </section>
@@ -320,7 +308,7 @@
               <article>
                 <span>1</span>
                 <strong>Phone-first checkout</strong>
-                <p>Guests can pay and tip before they reach the counter, keeping pickup faster and the experience more polished.</p>
+                <p>Guests can pay and tip before they reach the counter, keeping pickup faster and more organized.</p>
               </article>
               <article>
                 <span>2</span>

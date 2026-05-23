@@ -792,7 +792,7 @@ h3 {
 
 .guest-form {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: 1fr;
   gap: 12px;
 }
 
@@ -802,14 +802,26 @@ h3 {
   gap: 8px;
 }
 
+.guest-form label,
+.subheading h3,
+.qr-copy strong {
+  font-size: 1.05rem;
+}
+
+.guest-form label {
+  color: var(--ink);
+  font-weight: 600;
+}
+
 .guest-form input,
 .guest-form select {
-  min-height: 3rem;
+  min-height: 3.2rem;
   padding: 0 1rem;
   border-radius: 16px;
   border: 1px solid var(--line);
   background: rgba(255, 255, 255, 0.05);
   color: var(--ink);
+  font-size: 1rem;
 }
 
 .tip-grid {
@@ -818,15 +830,33 @@ h3 {
   gap: 12px;
 }
 
+.tip-card strong,
+.payment-card strong {
+  font-size: 1rem;
+}
+
+.tip-card p,
+.payment-card p,
+.payment-card small,
+.fee-banner,
+.checkout-note,
+.qr-copy p,
+.qr-copy span,
+#providerBadge {
+  font-size: 0.95rem;
+}
+
 #providerBadge,
 .fee-banner {
   padding: 0.9rem 1rem;
 }
 
 .qr-panel {
+  display: grid;
   grid-template-columns: auto 1fr;
   align-items: center;
   padding: 18px;
+  gap: 16px;
 }
 
 .qr-code {
@@ -876,6 +906,7 @@ h3 {
   border-radius: 18px;
   border: 1px solid var(--line);
   background: rgba(255, 248, 230, 0.05);
+  line-height: 1.6;
 }
 
 .wide {
