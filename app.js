@@ -1,4 +1,27 @@
 const menuData = {
+  locations: [
+    {
+      id: "orlando",
+      name: "Orlando",
+      subtitle: "Downtown flagship",
+      blurb: "Downtown-friendly ordering with quick phone checkout and a clean pickup handoff.",
+      wait: "Ready in 8-12 min",
+    },
+    {
+      id: "winter-springs",
+      name: "Winter Springs",
+      subtitle: "Neighborhood flow",
+      blurb: "Same ordering flow, same Kava Culture feel, with room for local events and featured drops.",
+      wait: "Ready in 6-10 min",
+    },
+    {
+      id: "lake-mary",
+      name: "Lake Mary",
+      subtitle: "Suburban consistency",
+      blurb: "A consistent branded menu experience that still leaves room for each store to spotlight its own rhythm.",
+      wait: "Ready in 7-11 min",
+    },
+  ],
   feelings: [
     { id: "calm-social", name: "Calm + Social", description: "Easy, welcoming, porch-session energy." },
     { id: "relax-move", name: "Relax + Move", description: "Soft landing with enough lift to stay present." },
@@ -67,6 +90,8 @@ const menuData = {
 };
 
 const state = {
+  selectedLocationId: "orlando",
+  hasStartedOrder: false,
   selectedFeelingId: "mood-joy",
   selectedInfusionId: "fiji",
   selectedDrinkId: "fijian-sunset",
@@ -79,6 +104,10 @@ const state = {
 };
 
 const refs = {
+  locationOptions: document.querySelector("#locationOptions"),
+  selectedLocationName: document.querySelector("#selectedLocationName"),
+  selectedLocationMeta: document.querySelector("#selectedLocationMeta"),
+  startOrderButton: document.querySelector("#startOrderButton"),
   feelingOptions: document.querySelector("#feelingOptions"),
   infusionOptions: document.querySelector("#infusionOptions"),
   drinkOptions: document.querySelector("#drinkOptions"),
@@ -112,9 +141,12 @@ const refs = {
   submitOrder: document.querySelector("#submitOrder"),
   decreaseQuantity: document.querySelector("#decreaseQuantity"),
   increaseQuantity: document.querySelector("#increaseQuantity"),
+  builderGrid: document.querySelector("#builder"),
+  flowGate: document.querySelector("#flowGate"),
 };
 
 const byId = (items, id) => items.find((item) => item.id === id);
+const getSelectedLocation = () => byId(menuData.locations, state.selectedLocationId);
 const getSelectedDrink = () => byId(menuData.drinks, state.selectedDrinkId);
 const getSelectedFeeling = () => byId(menuData.feelings, state.selectedFeelingId);
 const getSelectedInfusion = () => byId(menuData.infusions, state.selectedInfusionId);
@@ -213,6 +245,15 @@ function renderFeelings() {
   `).join("");
 }
 
+function renderLocations() {
+  refs.locationOptions.innerHTML = menuData.locations.map((location) => `
+    <button class="location-pill" type="button" data-location-id="${location.id}" data-active="${location.id === state.selectedLocationId}">
+      <strong>${location.name}</strong>
+      <small>${location.subtitle}</small>
+    </button>
+  `).join("");
+}
+
 function renderInfusions() {
   refs.infusionOptions.innerHTML = menuData.infusions.map((item) => `
     <button class="choice-card" type="button" data-infusion-id="${item.id}" data-active="${item.id === state.selectedInfusionId}" style="--accent-swatch:${item.accent};">
@@ -291,6 +332,7 @@ function renderPaymentOptions() {
 
 function updateStage() {
   const drink = getSelectedDrink();
+  const location = getSelectedLocation();
   const feeling = getSelectedFeeling();
   const infusion = getSelectedInfusion();
   const tags = [...new Set([...drink.tags, ...getSelectedFlavors().map((item) => item.name)])].slice(0, 6);
@@ -301,7 +343,7 @@ function updateStage() {
   refs.stageDrinkPoster.src = buildDrinkPoster(drink);
   refs.stageDrinkPoster.alt = `${drink.name} poster artwork`;
   refs.stageFeeling.textContent = feeling.name;
-  refs.stageInfusion.textContent = infusion.name;
+  refs.stageInfusion.textContent = `${infusion.name} • ${location.name}`;
   refs.stagePaymentHint.textContent = state.selectedPaymentId === "bank" ? "Secure low-friction checkout" : "Fast digital wallet checkout";
   refs.stageIngredients.innerHTML = tags.map((tag) => `<span>${tag}</span>`).join("");
 
@@ -318,14 +360,24 @@ function updateStage() {
 }
 
 function updateProgress() {
+  const location = getSelectedLocation();
   refs.feelingPreview.textContent = getSelectedFeeling().name;
   refs.infusionPreview.textContent = getSelectedInfusion().name;
   refs.drinkPreview.textContent = getSelectedDrink().name;
-  refs.paymentPreview.textContent = getSelectedPayment().shortName;
+  refs.paymentPreview.textContent = `${getSelectedPayment().shortName} • ${location.name}`;
+}
+
+function updateLocationState() {
+  const location = getSelectedLocation();
+  refs.selectedLocationName.textContent = location.name;
+  refs.selectedLocationMeta.textContent = `${location.blurb} ${location.wait}`;
+  refs.builderGrid.classList.toggle("is-gated", !state.hasStartedOrder);
+  refs.flowGate.hidden = state.hasStartedOrder;
 }
 
 function updateCheckout() {
   const payment = getSelectedPayment();
+  const location = getSelectedLocation();
   const subtotal = getSubtotal();
   const tip = getTipAmount();
   const total = getGuestTotal();
@@ -343,18 +395,19 @@ function updateCheckout() {
   refs.tipValue.textContent = formatCurrency(tip);
   refs.totalValue.textContent = formatCurrency(total);
   refs.providerBadge.textContent = payment.id === "bank" ? "Secure bank checkout" : "Fast wallet checkout";
-  refs.feeBanner.textContent = `${payment.name} is available for this order and keeps checkout on the guest's phone from start to finish.`;
+  refs.feeBanner.textContent = `${location.name} keeps ${payment.name.toLowerCase()} available inside the same phone-first flow.`;
   refs.qrCallout.textContent = payment.id === "bank"
-    ? "Direct bank pay is ready for this order."
-    : "Phone wallet link is ready for this order.";
+    ? `${location.name} is ready for direct bank pay on this order.`
+    : `${location.name} is ready for phone wallet checkout on this order.`;
 
-  const orderSummary = `${getSelectedDrink().name} for ${state.guestName || "Tribe Guest"} at ${formatCurrency(total)} with ${state.selectedTip}% gratuity`;
+  const orderSummary = `${getSelectedDrink().name} at ${location.name} for ${state.guestName || "Tribe Guest"} at ${formatCurrency(total)} with ${state.selectedTip}% gratuity`;
   refs.submitOrder.textContent = "Continue to checkout";
   refs.submitOrder.href = `mailto:hello@kavaculture.xyz?subject=${encodeURIComponent("Kava Culture Phone Order")}&body=${encodeURIComponent(orderSummary)}`;
-  refs.checkoutNote.textContent = "Guests can choose their drink, tip on their phone, and move straight into checkout.";
+  refs.checkoutNote.textContent = `${location.name} guests can choose their drink, tip on their phone, and move straight into checkout.`;
 }
 
 function renderAll() {
+  renderLocations();
   renderFeelings();
   renderInfusions();
   renderDrinks();
@@ -362,6 +415,7 @@ function renderAll() {
   renderElevateOptions();
   renderTipOptions();
   renderPaymentOptions();
+  updateLocationState();
   updateStage();
   updateProgress();
   updateCheckout();
@@ -371,6 +425,7 @@ function handleSelectionClick(event) {
   const button = event.target.closest("button");
   if (!button) return;
 
+  if (button.dataset.locationId) state.selectedLocationId = button.dataset.locationId;
   if (button.dataset.feelingId) state.selectedFeelingId = button.dataset.feelingId;
   if (button.dataset.infusionId) state.selectedInfusionId = button.dataset.infusionId;
   if (button.dataset.drinkId) state.selectedDrinkId = button.dataset.drinkId;
@@ -413,6 +468,10 @@ function bindDrinkTilt() {
 
 function bindInputs() {
   document.addEventListener("click", handleSelectionClick);
+  refs.startOrderButton.addEventListener("click", () => {
+    state.hasStartedOrder = true;
+    updateLocationState();
+  });
   refs.decreaseQuantity.addEventListener("click", () => {
     state.quantity = Math.max(1, state.quantity - 1);
     renderAll();

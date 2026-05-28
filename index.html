@@ -52,6 +52,19 @@
               and move into checkout without slowing down the bar.
             </p>
 
+            <div class="location-selector-card">
+              <div class="selector-copy">
+                <span class="selector-label">Choose a location</span>
+                <strong id="selectedLocationName">Orlando</strong>
+                <p id="selectedLocationMeta">Downtown-friendly ordering with quick phone checkout and a clean pickup handoff.</p>
+              </div>
+              <div class="location-pill-row" id="locationOptions"></div>
+              <div class="hero-cta-row">
+                <button class="primary-button" type="button" id="startOrderButton" data-scroll-target="builder">Start order</button>
+                <button class="ghost-button" type="button" data-scroll-target="locations">Compare locations</button>
+              </div>
+            </div>
+
             <div class="hero-badges" aria-label="Brand highlights">
               <span>Orlando</span>
               <span>Winter Springs</span>
@@ -164,12 +177,18 @@
           </div>
         </section>
 
-        <section class="builder-grid" id="builder">
+        <section class="builder-grid is-gated" id="builder">
           <section class="builder panel">
             <div class="section-heading">
               <p class="eyebrow">Guest Flow</p>
               <h2>The guest experience, simplified.</h2>
               <p>A single mobile flow that still feels like the in-store board, but reads more clearly on phone and works across stores.</p>
+            </div>
+
+            <div class="flow-gate" id="flowGate">
+              <p class="eyebrow">Start Here</p>
+              <h3>Select a location to open the order flow.</h3>
+              <p>Once a store is selected, the full guest experience appears with that location's ordering context.</p>
             </div>
 
             <div class="progress-track">

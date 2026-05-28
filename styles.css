@@ -267,6 +267,70 @@ h3 {
   align-content: start;
 }
 
+.location-selector-card {
+  display: grid;
+  gap: 14px;
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.selector-copy {
+  display: grid;
+  gap: 6px;
+}
+
+.selector-label {
+  color: rgba(255, 226, 162, 0.9);
+  font-size: 0.76rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.selector-copy strong {
+  font-size: 1.35rem;
+}
+
+.selector-copy p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.location-pill-row,
+.hero-cta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.location-pill {
+  display: grid;
+  gap: 4px;
+  min-width: 10rem;
+  padding: 0.9rem 1rem;
+  border-radius: 18px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.04);
+  text-align: left;
+}
+
+.location-pill strong {
+  font-size: 0.98rem;
+}
+
+.location-pill small {
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+
+.location-pill[data-active="true"] {
+  border-color: color-mix(in srgb, var(--accent-two) 65%, white);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.04)), rgba(255, 255, 255, 0.06);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.16);
+}
+
 .hero-badges span,
 .detail-pills span,
 .progress-pill,
@@ -617,6 +681,32 @@ h3 {
   grid-template-columns: minmax(0, 1.2fr) minmax(21rem, 0.8fr);
 }
 
+.builder-grid.is-gated .progress-track,
+.builder-grid.is-gated .builder-stack,
+.builder-grid.is-gated .checkout {
+  opacity: 0.22;
+  filter: saturate(0.7);
+  pointer-events: none;
+}
+
+.flow-gate {
+  margin-bottom: 18px;
+  padding: 18px;
+  border: 1px dashed rgba(255, 226, 162, 0.28);
+  border-radius: 20px;
+  background: rgba(255, 248, 230, 0.045);
+}
+
+.flow-gate h3 {
+  margin: 0 0 0.4rem;
+}
+
+.flow-gate p:last-child {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
 .bottom-grid {
   grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
 }
@@ -716,8 +806,7 @@ h3 {
 .payment-grid,
 .summary-card,
 .total-lines,
-.checkout-actions,
-.source-gallery {
+.checkout-actions {
   display: grid;
   gap: 12px;
 }
