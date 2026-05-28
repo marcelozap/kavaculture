@@ -7,6 +7,7 @@ const menuData = {
       blurb: "Downtown-friendly ordering with quick phone checkout and a clean pickup handoff.",
       wait: "Ready in 8-12 min",
       featured: ["Downtown", "Late Night", "Featured Cocktails"],
+      featuredDrinkIds: ["fijian-sunset", "raspberry-lemonade", "twisted-tonic", "pineapple-express", "espresso", "golden-latte"],
       stats: [
         { label: "Store rhythm", value: "Fast-moving downtown traffic with a polished mobile handoff" },
         { label: "Featured menu", value: "Botanical cocktails, premium plant boys, and quick reorder favorites" },
@@ -29,6 +30,7 @@ const menuData = {
       blurb: "Same ordering flow, same Kava Culture feel, with room for local events and featured drops.",
       wait: "Ready in 6-10 min",
       featured: ["Neighborhood", "Featured Drops", "Recurring Nights"],
+      featuredDrinkIds: ["down-by-the-bay", "kavateers-choice", "rappleberry-crush", "matcha-latte", "cold-brew", "churro-cha-cha"],
       stats: [
         { label: "Store rhythm", value: "A calmer neighborhood flow with room for repeat regulars and community nights" },
         { label: "Featured menu", value: "Rotating highlights, botanical infusions, and store-specific drops" },
@@ -51,6 +53,7 @@ const menuData = {
       blurb: "A consistent branded menu experience that still leaves room for each store to spotlight its own rhythm.",
       wait: "Ready in 7-11 min",
       featured: ["Consistent", "Family-Friendly", "Featured Wellness"],
+      featuredDrinkIds: ["golden-latte", "matcha-latte", "kava-supreme", "nutella-bomb", "latte", "loose-leaf-herbal-tea"],
       stats: [
         { label: "Store rhythm", value: "A consistent suburban flow built around repeat customers and an easy return visit" },
         { label: "Featured menu", value: "Wellness-forward drinks, featured add-ons, and clean menu discovery" },
@@ -137,6 +140,7 @@ const menuData = {
 const state = {
   selectedLocationId: "orlando",
   hasStartedOrder: false,
+  showFullMenu: false,
   selectedFeelingId: "mood-joy",
   selectedInfusionId: "fiji",
   selectedDrinkId: "fijian-sunset",
@@ -346,7 +350,27 @@ function renderInfusions() {
   `).join("");
 }
 
+function renderDrinkCard(drink) {
+  return `
+    <button class="drink-option" type="button" data-drink-id="${drink.id}" data-active="${drink.id === state.selectedDrinkId}" style="--swatch-a:${drink.colors[0]}; --swatch-b:${drink.colors[2]};">
+      <span class="price-tag">${formatCurrency(drink.price)}</span>
+      <span class="drink-option-media">
+        <img class="drink-illustration" src="${buildDrinkPoster(drink)}" alt="${drink.name} poster art" loading="lazy" />
+      </span>
+      <span class="drink-option-copy">
+        <small>${drink.category}</small>
+        <strong>${drink.name}</strong>
+        <p>${drink.description}</p>
+      </span>
+    </button>
+  `;
+}
+
 function renderDrinks() {
+  const location = getSelectedLocation();
+  const featuredDrinks = location.featuredDrinkIds
+    .map((drinkId) => byId(menuData.drinks, drinkId))
+    .filter(Boolean);
   const grouped = menuData.drinks.reduce((map, drink) => {
     const key = drink.section;
     if (!map.has(key)) map.set(key, []);
@@ -354,22 +378,29 @@ function renderDrinks() {
     return map;
   }, new Map());
 
-  refs.drinkOptions.innerHTML = [...grouped.entries()].map(([section, drinks]) => `
-    <div class="drink-group-title">${section}</div>
-    ${drinks.map((drink) => `
-      <button class="drink-option" type="button" data-drink-id="${drink.id}" data-active="${drink.id === state.selectedDrinkId}" style="--swatch-a:${drink.colors[0]}; --swatch-b:${drink.colors[2]};">
-        <span class="price-tag">${formatCurrency(drink.price)}</span>
-        <span class="drink-option-media">
-          <img class="drink-illustration" src="${buildDrinkPoster(drink)}" alt="${drink.name} poster art" loading="lazy" />
-        </span>
-        <span class="drink-option-copy">
-          <small>${drink.category}</small>
-          <strong>${drink.name}</strong>
-          <p>${drink.description}</p>
-        </span>
+  const featuredMarkup = `
+    <div class="drink-collection-head">
+      <div>
+        <div class="drink-group-title">Featured at ${location.name}</div>
+        <p class="drink-collection-copy">Start with the strongest drinks for this store, then open the full board only if the guest wants to keep browsing.</p>
+      </div>
+      <button class="ghost-button menu-toggle-button" type="button" data-action="toggle-full-menu" aria-expanded="${state.showFullMenu}">
+        ${state.showFullMenu ? "Hide full menu" : "View full menu"}
       </button>
-    `).join("")}
-  `).join("");
+    </div>
+    ${featuredDrinks.map(renderDrinkCard).join("")}
+  `;
+
+  const fullMenuMarkup = state.showFullMenu ? [...grouped.entries()].map(([section, drinks]) => `
+    <div class="drink-group-title drink-group-title-secondary">${section}</div>
+    ${drinks.map(renderDrinkCard).join("")}
+  `).join("") : "";
+
+  refs.drinkOptions.innerHTML = `
+    ${featuredMarkup}
+    ${state.showFullMenu ? `<div class="drink-collection-note">Full menu open for guests who want coffee, tea, premium builds, and the full signature cocktail lineup.</div>` : ""}
+    ${fullMenuMarkup}
+  `;
 }
 
 function renderFlavors() {
@@ -498,6 +529,7 @@ function updateCheckout() {
 }
 
 function renderAll() {
+  updateLocationState();
   renderLocations();
   renderLocationCards();
   renderHeroContext();
@@ -509,7 +541,6 @@ function renderAll() {
   renderElevateOptions();
   renderTipOptions();
   renderPaymentOptions();
-  updateLocationState();
   updateStage();
   updateProgress();
   updateCheckout();
@@ -519,7 +550,16 @@ function handleSelectionClick(event) {
   const button = event.target.closest("button");
   if (!button) return;
 
-  if (button.dataset.locationId) state.selectedLocationId = button.dataset.locationId;
+  if (button.dataset.action === "toggle-full-menu") {
+    state.showFullMenu = !state.showFullMenu;
+    renderAll();
+    return;
+  }
+
+  if (button.dataset.locationId && button.dataset.locationId !== state.selectedLocationId) {
+    state.selectedLocationId = button.dataset.locationId;
+    state.showFullMenu = false;
+  }
   if (button.dataset.feelingId) state.selectedFeelingId = button.dataset.feelingId;
   if (button.dataset.infusionId) state.selectedInfusionId = button.dataset.infusionId;
   if (button.dataset.drinkId) state.selectedDrinkId = button.dataset.drinkId;
@@ -564,7 +604,7 @@ function bindInputs() {
   document.addEventListener("click", handleSelectionClick);
   refs.startOrderButton.addEventListener("click", () => {
     state.hasStartedOrder = true;
-    updateLocationState();
+    renderAll();
   });
   refs.decreaseQuantity.addEventListener("click", () => {
     state.quantity = Math.max(1, state.quantity - 1);

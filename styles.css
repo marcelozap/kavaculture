@@ -858,6 +858,44 @@ h3 {
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
+.drink-collection-head {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  padding-bottom: 4px;
+}
+
+.drink-collection-head > div {
+  display: grid;
+  gap: 8px;
+}
+
+.drink-collection-copy,
+.drink-collection-note {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.drink-collection-copy {
+  max-width: 38rem;
+}
+
+.drink-collection-note {
+  grid-column: 1 / -1;
+  padding: 14px 16px;
+  border-radius: 18px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.035);
+  font-size: 0.95rem;
+}
+
+.menu-toggle-button {
+  flex: 0 0 auto;
+}
+
 .flavor-grid {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
@@ -871,6 +909,12 @@ h3 {
   font-family: "Orbitron", sans-serif;
   letter-spacing: 0.18em;
   text-transform: uppercase;
+}
+
+.drink-group-title-secondary {
+  margin-top: 1.2rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .choice-card,
@@ -1170,5 +1214,14 @@ h3 {
 
   .qr-panel {
     grid-template-columns: 1fr;
+  }
+
+  .drink-collection-head {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .menu-toggle-button {
+    width: 100%;
   }
 }
