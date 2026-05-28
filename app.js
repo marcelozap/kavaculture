@@ -6,6 +6,21 @@ const menuData = {
       subtitle: "Downtown flagship",
       blurb: "Downtown-friendly ordering with quick phone checkout and a clean pickup handoff.",
       wait: "Ready in 8-12 min",
+      featured: ["Downtown", "Late Night", "Featured Cocktails"],
+      stats: [
+        { label: "Store rhythm", value: "Fast-moving downtown traffic with a polished mobile handoff" },
+        { label: "Featured menu", value: "Botanical cocktails, premium plant boys, and quick reorder favorites" },
+        { label: "Guest flow", value: "Phone tipping and digital checkout from the first screen" },
+      ],
+      defaults: { drinkId: "fijian-sunset", feelingId: "mood-joy", infusionId: "fiji" },
+      systemPoints: [
+        { title: "Store-specific featured menus", copy: "Push downtown favorites, late-night specials, and high-traffic featured drinks without changing the full product." },
+        { title: "Shared checkout behavior", copy: "Keep the same ordering logic across stores so regulars know exactly what to expect." },
+        { title: "Events and community hooks", copy: "Tie mobile ordering into downtown events, gatherings, and recurring programming." },
+      ],
+      eventTitle: "See what's happening in Orlando.",
+      eventCopy: "Use the same mobile experience to move guests from ordering into upcoming downtown events, featured nights, and community programming.",
+      eventLink: "https://kavaculture.xyz/events/orlando",
     },
     {
       id: "winter-springs",
@@ -13,6 +28,21 @@ const menuData = {
       subtitle: "Neighborhood flow",
       blurb: "Same ordering flow, same Kava Culture feel, with room for local events and featured drops.",
       wait: "Ready in 6-10 min",
+      featured: ["Neighborhood", "Featured Drops", "Recurring Nights"],
+      stats: [
+        { label: "Store rhythm", value: "A calmer neighborhood flow with room for repeat regulars and community nights" },
+        { label: "Featured menu", value: "Rotating highlights, botanical infusions, and store-specific drops" },
+        { label: "Guest flow", value: "A simple mobile path that stays welcoming and easy to repeat" },
+      ],
+      defaults: { drinkId: "down-by-the-bay", feelingId: "relax-move", infusionId: "red-vein" },
+      systemPoints: [
+        { title: "Store-specific featured menus", copy: "Rotate local specials, feature recurring favorites, and spotlight event-based drinks by night." },
+        { title: "Shared checkout behavior", copy: "Keep the same branded ordering flow while giving the Winter Springs location its own pace." },
+        { title: "Events and community hooks", copy: "Use the same framework to drive neighborhood events, local drops, and community programming." },
+      ],
+      eventTitle: "See upcoming Winter Springs events.",
+      eventCopy: "Highlight neighborhood gatherings, recurring nights, and store-specific happenings without sending guests into a separate disconnected flow.",
+      eventLink: "https://kavaculture.xyz/events/winter-springs",
     },
     {
       id: "lake-mary",
@@ -20,6 +50,21 @@ const menuData = {
       subtitle: "Suburban consistency",
       blurb: "A consistent branded menu experience that still leaves room for each store to spotlight its own rhythm.",
       wait: "Ready in 7-11 min",
+      featured: ["Consistent", "Family-Friendly", "Featured Wellness"],
+      stats: [
+        { label: "Store rhythm", value: "A consistent suburban flow built around repeat customers and an easy return visit" },
+        { label: "Featured menu", value: "Wellness-forward drinks, featured add-ons, and clean menu discovery" },
+        { label: "Guest flow", value: "A structured experience that still feels local to the store" },
+      ],
+      defaults: { drinkId: "golden-latte", feelingId: "strength-stamina", infusionId: "yellow-vein" },
+      systemPoints: [
+        { title: "Store-specific featured menus", copy: "Showcase wellness-forward drinks, daytime favorites, and cleaner featured bundles for this location." },
+        { title: "Shared checkout behavior", copy: "Use the same product structure across stores while adapting the featured experience for Lake Mary." },
+        { title: "Events and community hooks", copy: "Promote local events, community meetups, and recurring programs from the same experience." },
+      ],
+      eventTitle: "See upcoming Lake Mary events.",
+      eventCopy: "Make events feel native to the ordering journey so guests can move from the menu into featured nights and community programming.",
+      eventLink: "https://kavaculture.xyz/events/lake-mary",
     },
   ],
   feelings: [
@@ -108,6 +153,8 @@ const refs = {
   selectedLocationName: document.querySelector("#selectedLocationName"),
   selectedLocationMeta: document.querySelector("#selectedLocationMeta"),
   startOrderButton: document.querySelector("#startOrderButton"),
+  heroBadges: document.querySelector("#heroBadges"),
+  heroStats: document.querySelector("#heroStats"),
   feelingOptions: document.querySelector("#feelingOptions"),
   infusionOptions: document.querySelector("#infusionOptions"),
   drinkOptions: document.querySelector("#drinkOptions"),
@@ -143,6 +190,11 @@ const refs = {
   increaseQuantity: document.querySelector("#increaseQuantity"),
   builderGrid: document.querySelector("#builder"),
   flowGate: document.querySelector("#flowGate"),
+  locationsGrid: document.querySelector("#locationsGrid"),
+  systemPoints: document.querySelector("#systemPoints"),
+  eventsTitle: document.querySelector("#eventsTitle"),
+  eventsCopy: document.querySelector("#eventsCopy"),
+  eventsLink: document.querySelector("#eventsLink"),
 };
 
 const byId = (items, id) => items.find((item) => item.id === id);
@@ -251,6 +303,37 @@ function renderLocations() {
       <strong>${location.name}</strong>
       <small>${location.subtitle}</small>
     </button>
+  `).join("");
+}
+
+function renderLocationCards() {
+  refs.locationsGrid.innerHTML = menuData.locations.map((location, index) => `
+    <article class="location-card" data-active="${location.id === state.selectedLocationId}">
+      <span class="location-index">${String(index + 1).padStart(2, "0")}</span>
+      <strong>${location.name}</strong>
+      <p>${location.blurb}</p>
+    </article>
+  `).join("");
+}
+
+function renderHeroContext() {
+  const location = getSelectedLocation();
+  refs.heroBadges.innerHTML = location.featured.map((item) => `<span>${item}</span>`).join("");
+  refs.heroStats.innerHTML = location.stats.map((item) => `
+    <article>
+      <span>${item.label}</span>
+      <strong>${item.value}</strong>
+    </article>
+  `).join("");
+}
+
+function renderSystemPoints() {
+  const location = getSelectedLocation();
+  refs.systemPoints.innerHTML = location.systemPoints.map((item) => `
+    <article>
+      <strong>${item.title}</strong>
+      <p>${item.copy}</p>
+    </article>
   `).join("");
 }
 
@@ -373,6 +456,14 @@ function updateLocationState() {
   refs.selectedLocationMeta.textContent = `${location.blurb} ${location.wait}`;
   refs.builderGrid.classList.toggle("is-gated", !state.hasStartedOrder);
   refs.flowGate.hidden = state.hasStartedOrder;
+  refs.eventsTitle.textContent = location.eventTitle;
+  refs.eventsCopy.textContent = location.eventCopy;
+  refs.eventsLink.href = location.eventLink;
+  if (!state.hasStartedOrder) {
+    state.selectedDrinkId = location.defaults.drinkId;
+    state.selectedFeelingId = location.defaults.feelingId;
+    state.selectedInfusionId = location.defaults.infusionId;
+  }
 }
 
 function updateCheckout() {
@@ -408,6 +499,9 @@ function updateCheckout() {
 
 function renderAll() {
   renderLocations();
+  renderLocationCards();
+  renderHeroContext();
+  renderSystemPoints();
   renderFeelings();
   renderInfusions();
   renderDrinks();
