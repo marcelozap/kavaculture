@@ -3,10 +3,10 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Kava Culture Kava Bar | Drink Love</title>
+    <title>Kava Culture | Multi-Location Phone Ordering</title>
     <meta
       name="description"
-      content="Kava Culture phone ordering with gratuity on phone, digital checkout, and interactive drink discovery."
+      content="A cleaner mobile ordering flow for Kava Culture locations with branded menus, phone tipping, and digital checkout."
     />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -26,50 +26,51 @@
           <img class="brand-logo-image" src="./assets/kava-culture-logo-neon.png" alt="Kava Culture Kava Bar logo" />
           <div class="brand-copy">
             <p class="eyebrow">Drink Love</p>
-            <h1 class="logo-wordmark">Kava Culture Kava Bar</h1>
-            <p class="scriptline">Welcome to the Tribe</p>
+            <h1 class="logo-wordmark">Kava Culture</h1>
+            <p class="scriptline">Built For Every Location</p>
           </div>
         </div>
 
         <p class="topbar-copy">
-          Craft your experience, order from your phone, tip with ease, and move from menu to pickup in one smooth flow.
+          A cleaner mobile ordering flow for Kava Culture stores, built to keep menu discovery, tipping, and checkout in one place.
         </p>
 
         <div class="topbar-actions">
-          <button class="ghost-button" type="button" data-scroll-target="builder">Craft Your Experience</button>
-          <button class="primary-button" type="button" data-scroll-target="checkout">Order On Your Phone</button>
+          <button class="ghost-button" type="button" data-scroll-target="locations">View Locations</button>
+          <button class="primary-button" type="button" data-scroll-target="builder">See The Flow</button>
         </div>
       </header>
 
       <main class="layout">
         <section class="hero panel">
           <div class="hero-copy">
-            <p class="eyebrow">Craft Your Experience</p>
-            <p class="scriptline hero-script">Upgrade to premium crushed leaf. Upgrade to premium Fiji.</p>
-            <h2>Choose your feeling, build your flavors, and let every pour feel like part of the tribe.</h2>
+            <p class="eyebrow">Multi-Location Ordering</p>
+            <p class="scriptline hero-script">One experience. Multiple stores. Same Kava Culture feel.</p>
+            <h2>A calmer phone-ordering experience for every Kava Culture location.</h2>
             <p class="lead">
-              Pick your feeling, choose your botanical infusion, find your drink love, add gratuity on your screen,
-              and move straight into checkout.
+              This version is designed to work across Kava Culture stores so guests can browse the menu, add gratuity,
+              and move into checkout without slowing down the bar.
             </p>
 
             <div class="hero-badges" aria-label="Brand highlights">
-              <span>Drink Love</span>
-              <span>Welcome to the Tribe</span>
-              <span>Premium Crushed Leaf</span>
+              <span>Orlando</span>
+              <span>Winter Springs</span>
+              <span>Lake Mary</span>
+              <span>Ready For More</span>
             </div>
 
             <div class="hero-stats">
               <article>
-                <span>Pick your feeling</span>
-                <strong>Relax + Move, Mood + Joy, Energy + Focus</strong>
+                <span>Same brand feel</span>
+                <strong>Consistent Kava Culture ordering across locations</strong>
               </article>
               <article>
-                <span>Preferred checkout</span>
-                <strong>Digital payment built for speed, clarity, and easy pickup</strong>
+                <span>Location-ready menu</span>
+                <strong>Signature drinks, botanicals, and upgrades all in one flow</strong>
               </article>
               <article>
-                <span>Tip on phone</span>
-                <strong>Guest gratuity is built into the flow before pickup</strong>
+                <span>Phone checkout</span>
+                <strong>Tipping and payment stay on the guest's phone from start to finish</strong>
               </article>
             </div>
           </div>
@@ -137,12 +138,38 @@
           </div>
         </section>
 
+        <section class="locations-panel panel" id="locations">
+          <div class="section-heading compact-heading">
+            <p class="eyebrow">Locations</p>
+            <h2>Designed to scale across the Kava Culture footprint.</h2>
+            <p>Each store can keep the same mobile ordering experience while tailoring featured drinks, promos, and events.</p>
+          </div>
+
+          <div class="locations-grid">
+            <article class="location-card">
+              <span class="location-index">01</span>
+              <strong>Orlando</strong>
+              <p>Downtown-friendly ordering with quick phone checkout and a clean pickup handoff.</p>
+            </article>
+            <article class="location-card">
+              <span class="location-index">02</span>
+              <strong>Winter Springs</strong>
+              <p>Same ordering flow, same Kava Culture feel, with room for local events and featured drops.</p>
+            </article>
+            <article class="location-card">
+              <span class="location-index">03</span>
+              <strong>Lake Mary</strong>
+              <p>A consistent branded menu experience that still leaves room for each store to spotlight its own rhythm.</p>
+            </article>
+          </div>
+        </section>
+
         <section class="builder-grid" id="builder">
           <section class="builder panel">
             <div class="section-heading">
-              <p class="eyebrow">Build Your Order</p>
-              <h2>Phone ordering that feels like the real board.</h2>
-              <p>Every drink on the two menu boards is here, with direct-pay friendly checkout and gratuity built in.</p>
+              <p class="eyebrow">Guest Flow</p>
+              <h2>The guest experience, simplified.</h2>
+              <p>A single mobile flow that still feels like the in-store board, but reads more clearly on phone and works across stores.</p>
             </div>
 
             <div class="progress-track">
@@ -166,11 +193,11 @@
 
             <div class="builder-stack">
               <section class="builder-section">
-                <div class="builder-copy">
+              <div class="builder-copy">
                   <span class="step-index">1</span>
                   <div>
                     <h3>Pick your feeling</h3>
-                    <p>Relax + Move, Mood + Joy, Energy + Focus, or a stronger finish.</p>
+                    <p>Start with the mood of the order and guide the guest into the right menu path.</p>
                   </div>
                 </div>
                 <div class="choice-grid feeling-grid" id="feelingOptions"></div>
@@ -181,7 +208,7 @@
                   <span class="step-index">2</span>
                   <div>
                     <h3>Pick your botanical infusion</h3>
-                    <p>Fiji, Green Vein, White Vein, Red Vein, or Yellow Vein.</p>
+                    <p>Keep the Kava Culture infusion language intact while making the choice faster to understand.</p>
                   </div>
                 </div>
                 <div class="choice-grid infusion-grid" id="infusionOptions"></div>
@@ -192,7 +219,7 @@
                   <span class="step-index">3</span>
                   <div>
                     <h3>Find your drink love</h3>
-                    <p>Each menu item gets its own artwork, price, and flavor-forward description.</p>
+                    <p>Every signature drink stays visual, branded, and easy to compare at a glance.</p>
                   </div>
                 </div>
                 <div class="choice-grid drink-grid" id="drinkOptions"></div>
@@ -203,7 +230,7 @@
                   <span class="step-index">4</span>
                   <div>
                     <h3>Craft your flavors</h3>
-                    <p>Organic flavors and creamy add-ons that raise the ticket without slowing the line.</p>
+                    <p>Add-ons stay optional and organized instead of overwhelming the guest right away.</p>
                   </div>
                 </div>
                 <div class="choice-grid flavor-grid" id="flavorOptions"></div>
@@ -214,7 +241,7 @@
                   <span class="step-index">5</span>
                   <div>
                     <h3>Elevate</h3>
-                    <p>Premium crushed leaf, a new level shot, or a top shelf finish.</p>
+                    <p>Premium upgrades are still available, but the flow stays clean and easy to scan.</p>
                   </div>
                 </div>
                 <div class="choice-grid elevate-grid" id="elevateOptions"></div>
@@ -226,7 +253,7 @@
             <div class="section-heading">
               <p class="eyebrow">Checkout</p>
               <h2>Tip and pay on your phone.</h2>
-              <p>Guests can review their drink, add gratuity, and check out on their phone before pickup.</p>
+              <p>Guests can review the order, add gratuity, and complete checkout on phone before they reach the bar.</p>
             </div>
 
             <div class="guest-form">
@@ -300,45 +327,49 @@
         <section class="bottom-grid">
           <section class="insight-panel panel">
             <div class="section-heading">
-              <p class="eyebrow">Why This Works</p>
-              <h2>Built to help the bar move faster and keep more.</h2>
+              <p class="eyebrow">Why It Fits</p>
+              <h2>Built to feel more like a product than a presentation.</h2>
             </div>
 
             <div class="insight-grid">
               <article>
                 <span>1</span>
-                <strong>Phone-first checkout</strong>
-                <p>Guests can pay and tip before they reach the counter, keeping pickup faster and more organized.</p>
+                <strong>Cleaner guest flow</strong>
+                <p>The page is easier to scan, which makes the experience calmer for first-time guests and regulars alike.</p>
               </article>
               <article>
                 <span>2</span>
-                <strong>Brand-matched ordering</strong>
-                <p>The whole experience borrows the language, palette, and tropical neon feel of the in-store menu boards.</p>
+                <strong>Multi-location ready</strong>
+                <p>The same structure can be reused across Kava Culture stores while still allowing location-specific highlights.</p>
               </article>
               <article>
                 <span>3</span>
-                <strong>Every drink visualized</strong>
-                <p>Each drink gets a custom poster-style visual so discovery feels more like a premium menu than a basic POS list.</p>
+                <strong>Still unmistakably Kava Culture</strong>
+                <p>The tropical glow, menu language, and signature drink visuals keep the brand front and center.</p>
               </article>
             </div>
           </section>
 
           <section class="source-panel panel">
             <div class="section-heading">
-              <p class="eyebrow">Menu Boards</p>
-              <h2>The printed vibe, translated to the phone.</h2>
-              <p>The site design, wording, and atmosphere pull directly from the two boards you shared.</p>
+              <p class="eyebrow">Across Stores</p>
+              <h2>One system, multiple store moments.</h2>
+              <p>Featured drinks, store-specific events, and local promos can rotate by location without rebuilding the whole experience.</p>
             </div>
 
-            <div class="source-gallery">
-              <figure>
-                <img src="./assets/kava-menu-craft.jpeg" alt="Kava Culture Craft Your Experience menu board" />
-                <figcaption>Craft Your Experience and coffee, tea, and elevate language.</figcaption>
-              </figure>
-              <figure>
-                <img src="./assets/kava-menu-botanicals.jpeg" alt="Kava Culture botanical infusions menu board" />
-                <figcaption>Botanical infusions, drink love cocktails, and premium plant boys lineup.</figcaption>
-              </figure>
+            <div class="system-points">
+              <article>
+                <strong>Store-specific featured menus</strong>
+                <p>Highlight different drinks, bundles, or promos by location while preserving the same branded structure.</p>
+              </article>
+              <article>
+                <strong>Shared checkout behavior</strong>
+                <p>Keep guest expectations consistent, whether they are ordering in Orlando, Winter Springs, or Lake Mary.</p>
+              </article>
+              <article>
+                <strong>Events and community hooks</strong>
+                <p>Use the same framework to drive guests into upcoming events, local happenings, and recurring programming.</p>
+              </article>
             </div>
           </section>
         </section>
