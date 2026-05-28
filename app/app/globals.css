@@ -1,0 +1,20 @@
+html {
+  font-family: Arial, sans-serif;
+}
+
+body {
+  margin: 0;
+  padding: 2rem;
+  background: #0b0a12;
+  color: #f8f3e7;
+}
+
+main {
+  max-width: 48rem;
+}
+
+code {
+  padding: 0.15rem 0.35rem;
+  border-radius: 0.35rem;
+  background: rgba(255, 255, 255, 0.08);
+}

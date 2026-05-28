@@ -481,12 +481,52 @@ function updateProgress() {
   refs.paymentPreview.textContent = `${getSelectedPayment().shortName} • ${location.name}`;
 }
 
+function renderFeaturedRow(location) {
+  const row = document.getElementById("featuredRow");
+  const scroll = document.getElementById("featuredDrinksScroll");
+  const title = document.getElementById("featuredRowTitle");
+  if (!row || !scroll) return;
+
+  if (!state.hasStartedOrder) { row.style.display = "none"; return; }
+
+  row.style.display = "block";
+  if (title) title.textContent = `${location.name} picks`;
+
+  const featured = location.featuredDrinkIds
+    .map((id) => menuData.drinks.find((d) => d.id === id))
+    .filter(Boolean);
+
+  scroll.innerHTML = featured.map((d) => `
+    <button class="featured-drink-chip ${d.id === state.selectedDrinkId ? "active" : ""}"
+      type="button"
+      data-drink-id="${d.id}"
+      style="--chip-a:${d.colors[0]};--chip-b:${d.colors[2]}">
+      <span class="chip-swatch" style="background:linear-gradient(135deg,${d.colors[0]},${d.colors[2]})"></span>
+      <span class="chip-name">${d.name}</span>
+      <span class="chip-price">${formatCurrency(d.price)}</span>
+    </button>`).join("");
+
+  // bind quick-select
+  scroll.querySelectorAll(".featured-drink-chip").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const drink = menuData.drinks.find((d) => d.id === btn.dataset.drinkId);
+      if (!drink) return;
+      state.selectedDrinkId = drink.id;
+      state.selectedFeelingId = drink.feelingId;
+      state.selectedInfusionId = drink.infusionId;
+      renderAll();
+      document.getElementById("drinkOptions")?.scrollIntoView({ behavior: "smooth", block: "center" });
+    });
+  });
+}
+
 function updateLocationState() {
   const location = getSelectedLocation();
   refs.selectedLocationName.textContent = location.name;
   refs.selectedLocationMeta.textContent = `${location.blurb} ${location.wait}`;
   refs.builderGrid.classList.toggle("is-gated", !state.hasStartedOrder);
   refs.flowGate.hidden = state.hasStartedOrder;
+  renderFeaturedRow(location);
   refs.eventsTitle.textContent = location.eventTitle;
   refs.eventsCopy.textContent = location.eventCopy;
   refs.eventsLink.href = location.eventLink;
@@ -622,5 +662,346 @@ function bindInputs() {
   bindDrinkTilt();
 }
 
-bindInputs();
-renderAll();
+// ── DRINK AVATAR SYSTEM ──
+const AVATAR_KEY = "kc_avatar";
+
+const vibeColors = {
+  "calm-social":    { top: "#cff8ff", mid: "#64dbe9", bot: "#2f7db5", foam: "rgba(237,252,255,0.92)", straw: "#89f7ff" },
+  "relax-move":     { top: "#ffd7d9", mid: "#ff7d8d", bot: "#7de2b2", foam: "rgba(255,227,230,0.92)", straw: "#98fbff" },
+  "mood-joy":       { top: "#ffd693", mid: "#ff9960", bot: "#ff579f", foam: "rgba(255,236,214,0.95)", straw: "#7ef5ff" },
+  "energy-focus":   { top: "#fff1a2", mid: "#ffd15b", bot: "#ff8f42", foam: "rgba(255,245,212,0.92)", straw: "#87f9ff" },
+  "strength-stamina":{ top: "#fff0b2", mid: "#f0bb4c", bot: "#b2722e", foam: "rgba(255,244,210,0.92)", straw: "#a5efff" },
+};
+
+function loadAvatar() {
+  try { return JSON.parse(localStorage.getItem(AVATAR_KEY)); } catch { return null; }
+}
+function saveAvatar(data) {
+  try { localStorage.setItem(AVATAR_KEY, JSON.stringify(data)); } catch {}
+}
+
+function applyAvatarChip(avatar) {
+  const chip = document.getElementById("avatarChip");
+  const chipName = document.getElementById("avatarChipName");
+  const chipGlass = document.getElementById("avatarChipGlass");
+  if (!chip || !avatar) return;
+  const c = vibeColors[avatar.feelingId] || vibeColors["mood-joy"];
+  chipGlass.style.background = `linear-gradient(180deg, ${c.top}, ${c.mid}, ${c.bot})`;
+  chipName.textContent = avatar.name;
+  chip.style.display = "flex";
+}
+
+function renderAvatarGlass(glassEl, foamEl, liquidEl, strawEl, feelingId) {
+  const c = vibeColors[feelingId] || vibeColors["mood-joy"];
+  if (liquidEl) liquidEl.style.background = `linear-gradient(180deg, ${c.top}, ${c.mid}, ${c.bot})`;
+  if (foamEl)   foamEl.style.background = c.foam;
+  if (strawEl)  strawEl.style.background = c.straw;
+}
+
+function bindAvatarFlow() {
+  const overlay   = document.getElementById("avatarOverlay");
+  const step1     = document.getElementById("avatarStep1");
+  const step2     = document.getElementById("avatarStep2");
+  const step3     = document.getElementById("avatarStep3");
+  const nameInput = document.getElementById("avatarNameInput");
+  const nextBtn   = document.getElementById("avatarStep1Next");
+  const doneBtn   = document.getElementById("avatarDoneBtn");
+  const resetBtn  = document.getElementById("avatarResetBtn");
+  const vibeGrid  = document.getElementById("avatarVibeGrid");
+
+  if (!overlay) return;
+
+  // build vibe grid
+  menuData.feelings.forEach((f) => {
+    const c = vibeColors[f.id] || vibeColors["mood-joy"];
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "avatar-vibe-btn";
+    btn.dataset.feelingId = f.id;
+    btn.innerHTML = `
+      <div class="avatar-vibe-swatch" style="background:linear-gradient(135deg,${c.top},${c.bot})"></div>
+      <strong>${f.name}</strong>
+      <span>${f.description}</span>`;
+    btn.addEventListener("click", () => selectVibe(f.id, f.name));
+    vibeGrid?.appendChild(btn);
+  });
+
+  function openOverlay() {
+    overlay.classList.add("show");
+    overlay.setAttribute("aria-hidden", "false");
+    document.body.style.overflow = "hidden";
+    // pre-fill name if returning
+    const saved = loadAvatar();
+    if (saved?.name) nameInput.value = saved.name;
+    nameInput.focus();
+  }
+
+  function closeOverlay() {
+    overlay.classList.remove("show");
+    overlay.setAttribute("aria-hidden", "true");
+    document.body.style.overflow = "";
+  }
+
+  // show avatar on "Start order" if no avatar set yet
+  const startBtn = document.getElementById("startOrderButton");
+  startBtn?.addEventListener("click", (e) => {
+    const saved = loadAvatar();
+    if (!saved) {
+      e.stopImmediatePropagation();
+      e.preventDefault();
+      openOverlay();
+    }
+  }, true);
+
+  // step 1 → step 2
+  nextBtn?.addEventListener("click", () => {
+    const name = nameInput.value.trim() || "Tribe Guest";
+    step1.style.display = "none";
+    step2.style.display = "block";
+    document.getElementById("avatarRevealTitle").textContent = `Here's your avatar, ${name.split(" ")[0]}.`;
+  });
+
+  nameInput?.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") nextBtn?.click();
+  });
+
+  function selectVibe(feelingId, feelingName) {
+    const name = nameInput.value.trim() || "Tribe Guest";
+    // render the glass
+    renderAvatarGlass(
+      document.getElementById("avatarGlass"),
+      document.getElementById("avatarFoam"),
+      document.getElementById("avatarLiquid"),
+      document.getElementById("avatarStraw"),
+      feelingId
+    );
+    document.getElementById("avatarDisplayName").textContent = name;
+    document.getElementById("avatarDisplayVibe").textContent = feelingName;
+    document.getElementById("avatarRevealSub").textContent =
+      `You're set as ${name}. Your drinks will match your vibe.`;
+
+    step2.style.display = "none";
+    step3.style.display = "block";
+
+    // apply to state
+    state.guestName = name;
+    state.selectedFeelingId = feelingId;
+    const refs_name = document.getElementById("guestName");
+    if (refs_name) refs_name.value = name;
+
+    // save
+    saveAvatar({ name, feelingId });
+    applyAvatarChip({ name, feelingId });
+    renderAll();
+  }
+
+  resetBtn?.addEventListener("click", () => {
+    step3.style.display = "none";
+    step2.style.display = "block";
+  });
+
+  doneBtn?.addEventListener("click", () => {
+    closeOverlay();
+    state.hasStartedOrder = true;
+    renderAll();
+    document.getElementById("builder")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+
+  // on load: restore avatar if saved
+  const saved = loadAvatar();
+  if (saved) {
+    state.guestName = saved.name;
+    state.selectedFeelingId = saved.feelingId;
+    const guestNameEl = document.getElementById("guestName");
+    if (guestNameEl) guestNameEl.value = saved.name;
+    applyAvatarChip(saved);
+  }
+}
+
+function surpriseMe() {
+  const location = getSelectedLocation();
+  // pick a random featured drink for this location
+  const featuredIds = location?.featuredDrinkIds || [];
+  const pool = featuredIds.length
+    ? menuData.drinks.filter((d) => featuredIds.includes(d.id))
+    : menuData.drinks;
+  const drink = pool[Math.floor(Math.random() * pool.length)];
+  if (!drink) return;
+
+  state.selectedDrinkId = drink.id;
+  state.selectedFeelingId = drink.feelingId;
+  state.selectedInfusionId = drink.infusionId;
+  state.hasStartedOrder = true;
+  renderAll();
+
+  // scroll to builder and briefly highlight the chosen drink
+  document.getElementById("builder")?.scrollIntoView({ behavior: "smooth", block: "start" });
+
+  // flash the stage card to draw attention
+  const card = refs.drinkCard;
+  card.style.transition = "box-shadow 0.3s";
+  card.style.boxShadow = "0 0 0 3px var(--accent-two), 0 0 40px rgba(110,242,255,0.5)";
+  setTimeout(() => { card.style.boxShadow = ""; }, 1200);
+}
+
+function bindSurpriseMe() {
+  document.getElementById("surpriseMeBtn")?.addEventListener("click", surpriseMe);
+  document.getElementById("surpriseMeBtnBuilder")?.addEventListener("click", surpriseMe);
+}
+
+function bindOrderConfirmation() {
+  const overlay = document.getElementById("orderConfirmOverlay");
+  const submitBtn = document.getElementById("submitOrder");
+  const newOrderBtn = document.getElementById("confirmNewOrder");
+  const confirmEventsLink = document.getElementById("confirmEventsLink");
+
+  if (!overlay || !submitBtn) return;
+
+  submitBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    const drink = getSelectedDrink();
+    const location = menuData.locations.find((l) => l.id === state.selectedLocationId);
+    const guestName = state.guestName || "Tribe Guest";
+    const subtotal = drink ? drink.price * state.quantity : 0;
+    const tipAmount = subtotal * (state.selectedTip / 100);
+    const total = subtotal + tipAmount;
+    const flavors = [...state.selectedFlavorIds]
+      .map((id) => menuData.flavors.find((f) => f.id === id)?.name)
+      .filter(Boolean);
+
+    document.getElementById("confirmTitle").textContent =
+      `Your drink is being crafted, ${guestName.split(" ")[0]}.`;
+    document.getElementById("confirmSub").textContent =
+      `${location?.name || "Your location"} will call your name when it's ready.`;
+
+    const summaryEl = document.getElementById("confirmSummary");
+    summaryEl.innerHTML = `
+      <strong>${drink?.name || "Your drink"}</strong><br>
+      ${flavors.length ? `Add-ons: ${flavors.join(", ")}<br>` : ""}
+      ${state.selectedElevateId !== "house"
+        ? `Elevate: ${menuData.elevateOptions.find((e) => e.id === state.selectedElevateId)?.name || ""}<br>`
+        : ""}
+      Tip: ${state.selectedTip}% &nbsp;·&nbsp; Payment: ${menuData.paymentMethods.find((p) => p.id === state.selectedPaymentId)?.shortName || ""}
+    `;
+
+    document.getElementById("confirmTotal").textContent = `Guest total: $${total.toFixed(2)}`;
+
+    if (confirmEventsLink && location?.eventLink) {
+      confirmEventsLink.href = location.eventLink;
+    }
+
+    overlay.classList.add("show");
+    overlay.setAttribute("aria-hidden", "false");
+    document.body.style.overflow = "hidden";
+  });
+
+  newOrderBtn?.addEventListener("click", () => {
+    overlay.classList.remove("show");
+    overlay.setAttribute("aria-hidden", "true");
+    document.body.style.overflow = "";
+    state.selectedFlavorIds = new Set(["raspberry"]);
+    state.selectedElevateId = "house";
+    state.selectedTip = 20;
+    state.quantity = 1;
+    renderAll();
+    document.getElementById("builder")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+
+  overlay.addEventListener("click", (e) => {
+    if (e.target === overlay) {
+      overlay.classList.remove("show");
+      overlay.setAttribute("aria-hidden", "true");
+      document.body.style.overflow = "";
+    }
+  });
+}
+
+document.getElementById("viewFullMenuBtn")?.addEventListener("click", () => {
+  state.showFullMenu = true;
+  renderAll();
+  document.getElementById("drinkOptions")?.scrollIntoView({ behavior: "smooth", block: "start" });
+});
+
+// ── API MERGE ──
+// Tries to fetch live menu data from the Next.js /api/menu endpoint.
+// On success, merges location names/blurbs/featured lists and drink
+// names/prices/descriptions into the existing menuData.
+// On any failure, silently falls back to the full hardcoded data.
+// Visual config (colors, feelings, infusions) always stays hardcoded
+// since the API doesn't provide those yet.
+
+async function fetchAndMergeMenuData() {
+  try {
+    // In production the Next.js app and static site share the same Vercel
+    // deployment root, so /api/menu resolves correctly. Locally, the static
+    // site is served from the repo root and the Next.js dev server runs on
+    // :3000, so we try relative first and fall back to localhost:3000.
+    let res = null;
+    try {
+      res = await fetch("/api/menu", { signal: AbortSignal.timeout(3000) });
+      if (!res.ok) res = null;
+    } catch {}
+
+    if (!res) {
+      try {
+        res = await fetch("http://localhost:3000/api/menu", { signal: AbortSignal.timeout(2000) });
+        if (!res.ok) res = null;
+      } catch {}
+    }
+
+    if (!res) return; // silent fallback — hardcoded data stays
+
+    const json = await res.json();
+    const apiData = json?.data;
+    if (!apiData) return;
+
+    // Merge location data
+    if (Array.isArray(apiData.locations)) {
+      apiData.locations.forEach((apiLoc) => {
+        const local = menuData.locations.find((l) => l.id === apiLoc.slug);
+        if (!local) return;
+        if (apiLoc.name)       local.name       = apiLoc.name;
+        if (apiLoc.blurb)      local.blurb      = apiLoc.blurb;
+        if (apiLoc.waitTime)   local.wait        = `Ready in ${apiLoc.waitTime}`;
+        if (apiLoc.eventTitle) local.eventTitle  = apiLoc.eventTitle;
+        if (apiLoc.eventCopy)  local.eventCopy   = apiLoc.eventCopy;
+        if (apiLoc.eventLink)  local.eventLink   = apiLoc.eventLink;
+        // Update featured drink IDs from API (API uses slugs matching our drink IDs)
+        if (Array.isArray(apiLoc.featuredDrinks) && apiLoc.featuredDrinks.length) {
+          local.featuredDrinkIds = apiLoc.featuredDrinks.map((d) => d.slug).filter(Boolean);
+        }
+      });
+    }
+
+    // Merge drink data
+    if (Array.isArray(apiData.sections)) {
+      apiData.sections.forEach((section) => {
+        if (!Array.isArray(section.drinks)) return;
+        section.drinks.forEach((apiDrink) => {
+          const local = menuData.drinks.find((d) => d.id === apiDrink.slug);
+          if (!local) return;
+          if (apiDrink.name)        local.name        = apiDrink.name;
+          if (apiDrink.description) local.description = apiDrink.description;
+          if (apiDrink.category)    local.category    = apiDrink.category;
+          if (apiDrink.priceCents)  local.price       = apiDrink.priceCents / 100;
+        });
+      });
+    }
+
+    console.info("[kava] menu data merged from API");
+  } catch (err) {
+    // Any error — keep hardcoded data, log quietly
+    console.info("[kava] API unavailable, using local menu data", err?.message);
+  }
+}
+
+async function init() {
+  bindAvatarFlow();
+  bindInputs();
+  bindSurpriseMe();
+  bindOrderConfirmation();
+  await fetchAndMergeMenuData();
+  renderAll();
+}
+
+init();

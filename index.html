@@ -6,7 +6,7 @@
     <title>Kava Culture | Multi-Location Phone Ordering</title>
     <meta
       name="description"
-      content="A cleaner mobile ordering flow for Kava Culture locations with branded menus, phone tipping, and digital checkout."
+      content="A mobile ordering upgrade for Kava Culture locations with featured drinks, phone tipping, and location-based checkout."
     />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -32,10 +32,14 @@
         </div>
 
         <p class="topbar-copy">
-          A cleaner mobile ordering flow for Kava Culture stores, built to keep menu discovery, tipping, and checkout in one place.
+          A mobile ordering upgrade for Kava Culture locations, built to make ordering, tipping, and featured menus easier on phone.
         </p>
 
         <div class="topbar-actions">
+          <div class="avatar-chip" id="avatarChip" style="display:none">
+            <div class="avatar-chip-glass" id="avatarChipGlass"></div>
+            <span id="avatarChipName">Guest</span>
+          </div>
           <button class="ghost-button" type="button" data-scroll-target="locations">View Locations</button>
           <button class="primary-button" type="button" data-scroll-target="builder">See The Flow</button>
         </div>
@@ -44,13 +48,30 @@
       <main class="layout">
         <section class="hero panel">
           <div class="hero-copy">
-            <p class="eyebrow">Multi-Location Ordering</p>
-            <p class="scriptline hero-script">One experience. Multiple stores. Same Kava Culture feel.</p>
-            <h2>A calmer phone-ordering experience for every Kava Culture location.</h2>
+            <p class="eyebrow">Mobile Ordering Upgrade</p>
+            <p class="scriptline hero-script">Built for the guest moment after discovery.</p>
+            <h2>A cleaner way for guests to order at each Kava Culture location.</h2>
             <p class="lead">
-              This version is designed to work across Kava Culture stores so guests can browse the menu, add gratuity,
-              and move into checkout without slowing down the bar.
+              The current website builds the brand. This layer gives each store a simpler phone experience for featured drinks, gratuity, and checkout once a guest is ready to order.
             </p>
+
+            <div class="owner-value-row">
+              <div class="owner-value-card">
+                <span class="owner-value-icon">🥥</span>
+                <strong>Faster ordering</strong>
+                <p>Guests can decide before they reach the counter.</p>
+              </div>
+              <div class="owner-value-card">
+                <span class="owner-value-icon">💳</span>
+                <strong>Tip built in</strong>
+                <p>Gratuity is part of the order flow, not an afterthought.</p>
+              </div>
+              <div class="owner-value-card">
+                <span class="owner-value-icon">📍</span>
+                <strong>Store-specific flow</strong>
+                <p>Featured drinks and events can match each location.</p>
+              </div>
+            </div>
 
             <div class="location-selector-card">
               <div class="selector-copy">
@@ -61,7 +82,7 @@
               <div class="location-pill-row" id="locationOptions"></div>
               <div class="hero-cta-row">
                 <button class="primary-button" type="button" id="startOrderButton" data-scroll-target="builder">Start order</button>
-                <button class="ghost-button" type="button" data-scroll-target="locations">Compare locations</button>
+                <button class="ghost-button surprise-btn" type="button" id="surpriseMeBtn">🎲 Surprise me</button>
               </div>
             </div>
 
@@ -136,8 +157,8 @@
         <section class="locations-panel panel" id="locations">
           <div class="section-heading compact-heading">
             <p class="eyebrow">Locations</p>
-            <h2>Designed to scale across the Kava Culture footprint.</h2>
-            <p>Each store can keep the same mobile ordering experience while tailoring featured drinks, promos, and events.</p>
+            <h2>One ordering layer, tailored per location.</h2>
+            <p>Each store can keep the same guest flow while featuring its own drinks, events, and local favorites.</p>
           </div>
 
           <div class="locations-grid" id="locationsGrid"></div>
@@ -147,14 +168,27 @@
           <section class="builder panel">
             <div class="section-heading">
               <p class="eyebrow">Guest Flow</p>
-              <h2>The guest experience, simplified.</h2>
-              <p>A single mobile flow that still feels like the in-store board, but reads more clearly on phone and works across stores.</p>
+              <h2>A guest flow that feels easier to use on phone.</h2>
+              <p>The menu keeps the Kava Culture tone, but the path to ordering is cleaner, shorter, and easier to repeat.</p>
+              <button class="surprise-inline-btn" type="button" id="surpriseMeBtnBuilder">🎲 Not sure what to order? Surprise me</button>
             </div>
 
             <div class="flow-gate" id="flowGate">
               <p class="eyebrow">Start Here</p>
               <h3>Select a location to open the order flow.</h3>
-              <p>Once a store is selected, the full guest experience appears with that location's ordering context.</p>
+              <p>Start with the store, then show featured drinks, checkout, and events for that location.</p>
+            </div>
+
+            <!-- FEATURED DRINKS ROW -->
+            <div class="featured-row" id="featuredRow" style="display:none">
+              <div class="featured-row-header">
+                <div>
+                  <p class="eyebrow">Featured Now</p>
+                  <h3 id="featuredRowTitle">Tonight's picks</h3>
+                </div>
+                <button class="ghost-button" type="button" id="viewFullMenuBtn">View full menu ↓</button>
+              </div>
+              <div class="featured-drinks-scroll" id="featuredDrinksScroll"></div>
             </div>
 
             <div class="progress-track">
@@ -238,7 +272,7 @@
             <div class="section-heading">
               <p class="eyebrow">Checkout</p>
               <h2>Tip and pay on your phone.</h2>
-              <p>Guests can review the order, add gratuity, and complete checkout on phone before they reach the bar.</p>
+              <p>Guests can review the order, add gratuity, and complete payment on phone before pickup.</p>
             </div>
 
             <div class="guest-form">
@@ -276,8 +310,8 @@
               </div>
               <div class="qr-copy">
                 <span>Phone checkout</span>
-                <strong id="qrCallout">Direct bank pay is ready for this order.</strong>
-                <p>Open the checkout link, complete payment on phone, and walk up when the bar is ready.</p>
+                <strong id="qrCallout">Apple Pay or card checkout is ready for this order.</strong>
+                <p>Open the checkout link, complete payment on phone, and pick up when the bar calls the order.</p>
               </div>
             </div>
 
@@ -313,19 +347,19 @@
           <section class="insight-panel panel">
             <div class="section-heading">
               <p class="eyebrow">Why It Fits</p>
-              <h2>Built to feel more like a product than a presentation.</h2>
+              <h2>Built to behave like a real product.</h2>
             </div>
 
             <div class="insight-grid">
               <article>
                 <span>1</span>
                 <strong>Cleaner guest flow</strong>
-                <p>The page is easier to scan, which makes the experience calmer for first-time guests and regulars alike.</p>
+                <p>The page is easier to scan, which makes ordering calmer for first-time guests and regulars alike.</p>
               </article>
               <article>
                 <span>2</span>
                 <strong>Multi-location ready</strong>
-                <p>The same structure can be reused across Kava Culture stores while still allowing location-specific highlights.</p>
+                <p>The same structure can be reused across Kava Culture stores while still allowing store-specific highlights.</p>
               </article>
               <article>
                 <span>3</span>
@@ -338,8 +372,8 @@
           <section class="source-panel panel">
             <div class="section-heading">
               <p class="eyebrow">Across Stores</p>
-              <h2>One system, multiple store moments.</h2>
-              <p>Featured drinks, store-specific events, and local promos can rotate by location without rebuilding the whole experience.</p>
+              <h2>Consistent brand, flexible by location.</h2>
+              <p>Featured drinks, events, and local promos can rotate by store without changing the core guest flow.</p>
             </div>
 
             <div class="system-points" id="systemPoints"></div>
@@ -348,7 +382,7 @@
 
         <section class="events-panel panel">
           <div class="events-copy">
-            <p class="eyebrow">Community</p>
+            <p class="eyebrow">Events</p>
             <h2 id="eventsTitle">Check out upcoming events.</h2>
             <p id="eventsCopy"></p>
           </div>
@@ -358,6 +392,71 @@
           </a>
         </section>
       </main>
+
+      <!-- DRINK AVATAR ONBOARDING -->
+      <div class="avatar-overlay" id="avatarOverlay" aria-hidden="true">
+        <div class="avatar-card">
+
+          <!-- Step 1: Name -->
+          <div class="avatar-step" id="avatarStep1">
+            <div class="avatar-step-icon">🥥</div>
+            <p class="eyebrow">Welcome to Kava Culture</p>
+            <h2 class="avatar-step-title">What should we call you?</h2>
+            <p class="avatar-step-sub">Your name travels with your order.</p>
+            <input class="avatar-name-input" id="avatarNameInput" type="text" placeholder="Your name or nickname" maxlength="24" autocomplete="off" />
+            <button class="primary-button wide" id="avatarStep1Next">Next →</button>
+          </div>
+
+          <!-- Step 2: Vibe -->
+          <div class="avatar-step" id="avatarStep2" style="display:none">
+            <div class="avatar-step-icon">✨</div>
+            <p class="eyebrow">Your Vibe</p>
+            <h2 class="avatar-step-title">How are you feeling tonight?</h2>
+            <p class="avatar-step-sub">This builds your drink avatar.</p>
+            <div class="avatar-vibe-grid" id="avatarVibeGrid"></div>
+          </div>
+
+          <!-- Step 3: Avatar reveal -->
+          <div class="avatar-step" id="avatarStep3" style="display:none">
+            <p class="eyebrow">Your Drink Identity</p>
+            <h2 class="avatar-step-title" id="avatarRevealTitle">Here's your avatar.</h2>
+            <div class="avatar-reveal-wrap">
+              <div class="avatar-drink-glass" id="avatarGlass">
+                <div class="avatar-glass-foam" id="avatarFoam"></div>
+                <div class="avatar-glass-liquid" id="avatarLiquid"></div>
+                <div class="avatar-glass-straw" id="avatarStraw"></div>
+              </div>
+              <div class="avatar-reveal-label">
+                <strong id="avatarDisplayName">Guest</strong>
+                <span id="avatarDisplayVibe">Mood + Joy</span>
+              </div>
+            </div>
+            <p class="avatar-step-sub" id="avatarRevealSub">Your avatar is set. Let's find your drink.</p>
+            <button class="primary-button wide" id="avatarDoneBtn">Start ordering 🥥</button>
+            <button class="avatar-skip-link" id="avatarResetBtn" type="button">Change vibe</button>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ORDER CONFIRMATION OVERLAY -->
+      <div class="order-confirm-overlay" id="orderConfirmOverlay" aria-hidden="true">
+        <div class="order-confirm-card">
+          <div class="order-confirm-icon">🥥</div>
+          <p class="eyebrow">Order placed</p>
+          <h2 class="order-confirm-title" id="confirmTitle">Your drink is being crafted.</h2>
+          <p class="order-confirm-sub" id="confirmSub">Walk up when the bar calls your name.</p>
+
+          <div class="order-confirm-summary" id="confirmSummary"></div>
+
+          <div class="order-confirm-total" id="confirmTotal"></div>
+
+          <div class="order-confirm-actions">
+            <button class="primary-button wide" type="button" id="confirmNewOrder">Order again</button>
+            <a class="ghost-button wide" id="confirmEventsLink" href="https://kavaculture.xyz/events" target="_blank" rel="noreferrer">See what's on tonight →</a>
+          </div>
+        </div>
+      </div>
     </div>
 
     <script src="./app.js"></script>
