@@ -131,8 +131,8 @@ const menuData = {
     { id: "top-shelf", name: "Top shelf shot", price: 5, note: "Bigger finish without leaving checkout." },
   ],
   paymentMethods: [
-    { id: "bank", name: "Direct bank pay", shortName: "Direct bank pay", label: "Lowest fee", note: "Best margin for the bar on a hosted pay link or ACH-style checkout.", feeRate: 0.012, feeFixed: 0.05 },
-    { id: "wallet", name: "Phone wallet link", shortName: "Phone wallet", label: "Fast guest UX", note: "Great for QR, Apple Pay, or an SMS payment page.", feeRate: 0.021, feeFixed: 0.08 },
+    { id: "wallet", name: "Apple Pay / Card", shortName: "Apple Pay / Card", label: "Primary checkout", note: "Fastest and most familiar guest payment flow on phone.", feeRate: 0.021, feeFixed: 0.08 },
+    { id: "bank", name: "Bank pay", shortName: "Bank pay", label: "Optional", note: "Optional lower-cost payment path for guests who want it.", feeRate: 0.012, feeFixed: 0.05 },
   ],
   tipOptions: [15, 20, 25, 30],
 };
@@ -147,7 +147,7 @@ const state = {
   selectedFlavorIds: new Set(["raspberry"]),
   selectedElevateId: "house",
   selectedTip: 20,
-  selectedPaymentId: "bank",
+  selectedPaymentId: "wallet",
   guestName: "Tribe Guest",
   quantity: 1,
 };
@@ -432,7 +432,7 @@ function renderTipOptions() {
 
 function renderPaymentOptions() {
   refs.paymentOptions.innerHTML = menuData.paymentMethods.map((item) => {
-    const detail = item.id === "bank" ? "Best for a simple direct checkout flow" : "Fastest option for a quick phone payment";
+    const detail = item.id === "wallet" ? "Best default path for fast mobile checkout" : "Available as an optional alternate payment path";
     return `
       <button class="payment-card" type="button" data-payment-id="${item.id}" data-active="${item.id === state.selectedPaymentId}">
         <span class="price-tag">${item.label}</span>
@@ -458,7 +458,7 @@ function updateStage() {
   refs.stageDrinkPoster.alt = `${drink.name} poster artwork`;
   refs.stageFeeling.textContent = feeling.name;
   refs.stageInfusion.textContent = `${infusion.name} • ${location.name}`;
-  refs.stagePaymentHint.textContent = state.selectedPaymentId === "bank" ? "Secure low-friction checkout" : "Fast digital wallet checkout";
+  refs.stagePaymentHint.textContent = state.selectedPaymentId === "wallet" ? "Apple Pay and card ready" : "Optional bank payment available";
   refs.stageIngredients.innerHTML = tags.map((tag) => `<span>${tag}</span>`).join("");
 
   document.documentElement.style.setProperty("--accent-one", drink.colors[0]);
@@ -556,16 +556,16 @@ function updateCheckout() {
   refs.subtotalValue.textContent = formatCurrency(subtotal);
   refs.tipValue.textContent = formatCurrency(tip);
   refs.totalValue.textContent = formatCurrency(total);
-  refs.providerBadge.textContent = payment.id === "bank" ? "Secure bank checkout" : "Fast wallet checkout";
-  refs.feeBanner.textContent = `${location.name} keeps ${payment.name.toLowerCase()} available inside the same phone-first flow.`;
-  refs.qrCallout.textContent = payment.id === "bank"
-    ? `${location.name} is ready for direct bank pay on this order.`
-    : `${location.name} is ready for phone wallet checkout on this order.`;
+  refs.providerBadge.textContent = payment.id === "wallet" ? "Apple Pay / card ready" : "Optional bank pay";
+  refs.feeBanner.textContent = `${location.name} guests can complete checkout on phone with the same flow across each store.`;
+  refs.qrCallout.textContent = payment.id === "wallet"
+    ? `${location.name} is ready for Apple Pay or card checkout on this order.`
+    : `${location.name} also supports an optional bank payment path on this order.`;
 
   const orderSummary = `${getSelectedDrink().name} at ${location.name} for ${state.guestName || "Tribe Guest"} at ${formatCurrency(total)} with ${state.selectedTip}% gratuity`;
-  refs.submitOrder.textContent = "Continue to checkout";
+  refs.submitOrder.textContent = "Pay on phone";
   refs.submitOrder.href = `mailto:hello@kavaculture.xyz?subject=${encodeURIComponent("Kava Culture Phone Order")}&body=${encodeURIComponent(orderSummary)}`;
-  refs.checkoutNote.textContent = `${location.name} guests can choose their drink, tip on their phone, and move straight into checkout.`;
+  refs.checkoutNote.textContent = `${location.name} guests can choose their drink, add gratuity, and pay on phone before pickup.`;
 }
 
 function renderAll() {
